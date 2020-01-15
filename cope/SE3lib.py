@@ -16,4 +16,34 @@
 # details.
 #
 # You should have received a copy of the GNU General Public License along with
-# python-cope. If not, see <http://www.gnu.org
+# python-cope. If not, see <http://www.gnu.org/licenses/>.
+
+import numpy as np
+import scipy.linalg
+# Plots
+from mpl_toolkits.mplot3d import Axes3D
+import matplotlib.pyplot as plt
+
+def TransformInv(T):
+  """
+  Calculates the inverse of the input homogeneous transformation.
+  
+  This method is more efficient than using C{numpy.linalg.inv}, given 
+  the special properties of the homogeneous transformations.
+  
+  @type T: array, shape (4,4)
+  @param T: The input homogeneous transformation
+  @rtype: array, shape (4,4)
+  @return: The inverse of the input homogeneous transformation
+  """
+  R = T[:3,:3].T
+  p = T[:3,3]
+  T_inv = np.identity(4)
+  T_inv[:3,:3] = R
+  T_inv[:3,3] = np.dot(-R, p)
+  return T_inv
+
+def TranValidate(T):
+  """
+  Validate T
+  @type T:    array 4x4
