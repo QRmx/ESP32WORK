@@ -46,4 +46,36 @@ def TransformInv(T):
 def TranValidate(T):
   """
   Validate T
-  @type T:    array 4x4
+  @type T:    array 4x4 
+  @param T:   transformation matrix
+  """
+  raise NotImplementedError
+
+
+def RotValidate(C):
+  raise NotImplementedError
+
+
+def TranAd(T):
+  """
+  Compute Adjoint of 4x4 transformation matrix, return a 6x6 matrix
+  @type T:    array 4x4 
+  @param T:   transformation matrix
+  """
+  C = T[:3,:3]
+  r = T[:3,3]
+  AdT = np.zeros([6,6])
+  AdT[:3,:3] = C
+  AdT[:3,3:] = np.dot(Hat(r),C)
+  AdT[3:,3:] = C
+  return AdT
+
+
+def Hat(vec):
+  """
+  hat operator - return skew matrix (return 3x3 or 4x4 matrix) from vec
+  @param vec:   vector of 3 (rotation) or 6 (transformation)
+  """
+  if vec.shape[0] == 3: # skew from vec
+    return np.array([[0,-vec[2],vec[1]],[vec[2],0,-vec[0]],[-vec[1],vec[0],0]])
+  elif vec.sh
