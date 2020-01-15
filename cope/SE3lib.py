@@ -78,4 +78,39 @@ def Hat(vec):
   """
   if vec.shape[0] == 3: # skew from vec
     return np.array([[0,-vec[2],vec[1]],[vec[2],0,-vec[0]],[-vec[1],vec[0],0]])
-  elif vec.sh
+  elif vec.shape[0] == 6:
+    vechat = np.zeros((4,4))
+    vechat[:3,:3] = Hat(vec[3:])
+    vechat[:3,3] = vec[:3]
+    return vechat
+  else:
+    raise ValueError("Invalid vector length for hat operator\n")
+
+
+def VecFromSkew(r):
+  return np.array([r[2,1],r[0,2],r[1,0]])
+
+
+def CurlyHat(vec):
+  """
+  Builds the 6x6 curly hat matrix from the 6x1 input
+  @param vec:          a 6x1 vector xi
+  @param veccurlyhat:  a 6x6 matrix 
+  """
+  veccurlyhat = np.zeros((6,6))
+  veccurlyhat[:3,:3] = Hat(vec[3:])
+  veccurlyhat[:3,3:] = Hat(vec[:3])
+  veccurlyhat[3:,3:] = Hat(vec[3:])
+  return veccurlyhat
+
+
+def CovOp1(A):
+  """ 
+  Covariance operator 1 - eq. 44
+  """
+  return -np.trace(A)*np.eye(3) + A
+
+ 
+def CovOp2(A,B):
+  """ 
+  Covariance operator 2 - e
