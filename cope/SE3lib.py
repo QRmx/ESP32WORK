@@ -146,4 +146,25 @@ def TranToVec(T):
 #     if(np.linalg.norm(C-np.eye(3))<=1e-10):
 #       return np.zeros(3)
 #     else:
-#       phi = np.a
+#       phi = np.arccos((np.trace(C)-1)/2)
+#       return VecFromSkew(phi/(2*np.sin(phi))*(C-C.T))
+#   else:
+#     eigval, eigvect = np.linalg.eig(C)
+#     for (i,val) in enumerate(eigval):
+#       if abs((val-1)) <= 1e-10:
+#         return np.pi*np.real(eigvect[:,i])
+
+def RotToVec(C):
+  """
+  Compute the matrix log of the rotation matrix C
+  @param C:      3x3
+  @param return: Return a 3x1 vector (axis*angle) computed from C
+  """
+  # RotValidate(C)
+  epsilon = 0.0001
+  epsilon2 = 0.001
+  if ((abs(C[0,1]-C[1,0])<epsilon) and (abs(C[0,2]-C[2,0])<epsilon) and (abs(C[1,2]-C[2,1])<epsilon)):
+    # singularity found
+    # first check for identity matrix which must have +1 for all terms
+		# in leading diagonaland zero in other terms
+  
