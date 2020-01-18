@@ -113,4 +113,37 @@ def CovOp1(A):
  
 def CovOp2(A,B):
   """ 
-  Covariance operator 2 - e
+  Covariance operator 2 - eq. 45
+  """
+  return np.dot(CovOp1(A),CovOp1(B)) + CovOp1(np.dot(B,A))
+
+
+def TranToVec(T):
+  """
+  Compute the matrix log of the transformation matrix T
+  Convert from T to xi
+  @param T:       4x4
+  @param return:  return a 6x1 vector in tangent coordinates computed from T.
+  """
+  C = T[:3,:3]
+  r = T[:3,3]
+  
+  phi = RotToVec(C)
+  invJ = VecToJacInv(phi)
+  
+  rho = np.dot(invJ,r)
+  return np.hstack([rho,phi])
+
+
+# def RotToVec(C):
+#   """
+#   Compute the matrix log of the rotation matrix C
+#   @param C:      3x3
+#   @param return: Return a 3x1 vector (axis*angle) computed from C
+#   """
+#   #rotValidate(C)
+#   if(abs(np.trace(C)+1)>1e-10):
+#     if(np.linalg.norm(C-np.eye(3))<=1e-10):
+#       return np.zeros(3)
+#     else:
+#       phi = np.a
