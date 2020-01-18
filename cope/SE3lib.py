@@ -167,4 +167,22 @@ def RotToVec(C):
     # singularity found
     # first check for identity matrix which must have +1 for all terms
 		# in leading diagonaland zero in other terms
-  
+    if ((abs(C[0,1]+C[1,0]) < epsilon2) and (abs(C[0,2]+C[2,0]) < epsilon2) and (abs(C[1,2]+C[2,1]) < epsilon2) and (abs(C[0,0]+C[1,1]+C[2,2]-3) < epsilon2)): # this singularity is identity matrix so angle = 0
+      return np.zeros(3) #zero angle, arbitrary axis 
+    # otherwise this singularity is angle = 180
+    angle = np.pi
+    xx = (C[0,0]+1)/2.
+    yy = (C[1,1]+1)/2.
+    zz = (C[2,2]+1)/2.
+    xy = (C[0,1]+C[1,0])/4.
+    xz = (C[0,2]+C[2,0])/4.
+    yz = (C[1,2]+C[2,1])/4.
+    if ((xx > yy) and (xx > zz)): # C[0][0] is the largest diagonal term
+      if (xx< epsilon):
+        x = 0
+        y = np.sqrt(2)/2.
+        z = np.sqrt(2)/2.
+      else:
+        x = np.sqrt(xx)
+        y = xy/x
+        z =
