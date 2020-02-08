@@ -185,4 +185,26 @@ def RotToVec(C):
       else:
         x = np.sqrt(xx)
         y = xy/x
-        z =
+        z = xz/x
+    elif (yy > zz): # C[1][1] is the largest diagonal term
+      if (yy< epsilon):
+        x = np.sqrt(2)/2.
+        y = 0
+        z = np.sqrt(2)/2.
+      else:
+        y = np.sqrt(yy)
+        x = xy/y
+        z = yz/y
+    else: # C[2][2] is the largest diagonal term so base result on this
+      if (zz< epsilon):
+        x = np.sqrt(2)/2.
+        y = np.sqrt(2)/2.
+        z = 0
+      else:
+        z = np.sqrt(zz)
+        x = xz/z
+        y = yz/z
+    return angle*np.array((x,y,z))
+  s = np.sqrt((C[2,1] - C[1,2])*(C[2,1] - C[1,2])+(C[0,2] - C[2,0])*(C[0,2] - C[2,0])+(C[1,0] - C[0,1])*(C[1,0] - C[0,1])) # used to normalise
+  if (abs(s) < 0.001):
+    # prevent divide by zero, shou
