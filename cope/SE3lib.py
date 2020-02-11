@@ -207,4 +207,29 @@ def RotToVec(C):
     return angle*np.array((x,y,z))
   s = np.sqrt((C[2,1] - C[1,2])*(C[2,1] - C[1,2])+(C[0,2] - C[2,0])*(C[0,2] - C[2,0])+(C[1,0] - C[0,1])*(C[1,0] - C[0,1])) # used to normalise
   if (abs(s) < 0.001):
-    # prevent divide by zero, shou
+    # prevent divide by zero, should not happen if matrix is orthogonal and should be
+    # caught by singularity test above, but I've left it in just in case
+    s=1 
+        
+  angle = np.arccos(( C[0,0] + C[1,1] + C[2,2] - 1)/2.)
+  x = (C[2,1] - C[1,2])/s
+  y = (C[0,2] - C[2,0])/s
+  z = (C[1,0] - C[0,1])/s
+  return angle*np.array((x,y,z))
+
+def VecToRot(phi):
+  """
+  Return a rotation matrix computed from the input vec (phi 3x1)
+  @param phi: 3x1 vector (input)
+  @param C:   3x3 rotation matrix (output)
+  """
+  tiny = 1e-12
+  #check for small angle
+  nr = np.linalg.norm(phi)
+  if nr < tiny:
+    #~ # If the angle (nr) is small, fall back on the series representation.
+    # C = VecToRotSeries(phi,10)
+    C = np.eye(3)
+  else:
+    R = Hat(phi)
+    C = 
