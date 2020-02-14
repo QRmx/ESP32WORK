@@ -261,4 +261,25 @@ def cot(x):
 def VecToJacInv(vec):
   """
   Construction of the 3x3 J^-1 matrix or 6x6 J^-1 matrix.
-  @param vec:  3x1 vecto
+  @param vec:  3x1 vector or 6x1 vector (input)
+  @param invJ: 3x3 inv(J) matrix or 6x6 inv(J) matrix (output)
+  """
+  tiny = 1e-12
+  if vec.shape[0] == 3: # invJacobian of SO3
+    phi = vec
+    nr = np.linalg.norm(phi)
+    if nr < tiny:
+      # If the angle is small, fall back on the series representation
+      invJSO3 = VecToJacInvSeries(phi,10)
+    else:
+      axis = phi/nr
+      invJSO3 = 0.5*nr*cot(nr*0.5)*np.eye(3) + (1- 0.5*nr*cot(0.5*nr))*axis[np.newaxis]*axis[np.newaxis].T- 0.5*nr*Hat(axis)
+    return invJSO3
+  elif vec.shape[0] == 6: # invJacobian of SE3
+    rho = vec[:3]
+    phi = vec[3:]
+    
+    nr = np.linalg.norm(phi)
+    if nr < tiny:
+      # If the angle is small, fall back on the series representation
+      invJSO3 = VecToJacInvSeries(
