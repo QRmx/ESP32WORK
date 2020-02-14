@@ -232,4 +232,33 @@ def VecToRot(phi):
     C = np.eye(3)
   else:
     R = Hat(phi)
-    C = 
+    C = np.eye(3) + np.sin(nr)/nr*R + (1-np.cos(nr))/(nr*nr)*np.dot(R,R)
+  return C
+
+
+def VecToRotSeries(phi, N):
+  """"
+  Build a rotation matrix using the exponential map series with N elements in the series 
+  @param phi: 3x1 vector
+  @param N:   number of terms to include in the series
+  @param C:   3x3 rotation matrix (output)
+  """
+  C = np.eye(3)
+  xM = np.eye(3)
+  cmPhi = Hat(phi)
+  for n in range(N):
+    xM = np.dot(xM, cmPhi)/(n+1)
+    C = C + xM
+  # Project the resulting rotation matrix back onto SO(3)
+  C = np.dot(C,np.linalg.inv(scipy.linalg.sqrtm(np.dot(C.T,C))))
+  return C
+
+
+def cot(x):
+  return 1./np.tan(x)
+
+  
+def VecToJacInv(vec):
+  """
+  Construction of the 3x3 J^-1 matrix or 6x6 J^-1 matrix.
+  @param vec:  3x1 vecto
