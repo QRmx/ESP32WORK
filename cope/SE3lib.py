@@ -282,4 +282,29 @@ def VecToJacInv(vec):
     nr = np.linalg.norm(phi)
     if nr < tiny:
       # If the angle is small, fall back on the series representation
-      invJSO3 = VecToJacInvSeries(
+      invJSO3 = VecToJacInvSeries(phi,10)
+    else:
+      invJSO3 = VecToJacInv(phi)
+    Q = VecToQ(vec)
+    invJSE3 = np.zeros((6,6))
+    invJSE3[:3,:3] = invJSO3
+    invJSE3[:3,3:] = -np.dot(np.dot(invJSO3,Q), invJSO3)
+    invJSE3[3:,3:] = invJSO3
+    return invJSE3
+  else:
+    raise ValueError("Invalid input vector length\n")
+
+
+def VecToJacInvSeries(vec,N):
+  """
+  Construction of the 3x3 J^-1 matrix or 6x6 J^-1 matrix. Series representation.
+  @param vec:  3x1 vector or 6x1 vector
+  @param N:    number of terms to include in the series
+  @param invJ: 3x3 inv(J) matrix or 6x6 inv(J) matrix (output)
+  """
+  if vec.shape[0] == 3: # invJacobian of SO3
+    invJSO3 = np.eye(3)
+    pxn = np.eye(3)
+    px = Hat(vec)
+    for n in range(N):
+      pxn = np.d
