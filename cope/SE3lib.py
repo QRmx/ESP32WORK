@@ -334,4 +334,26 @@ def BernoulliNumber(n):
     A[m] = Fr(1, m+1)
     for j in range(m, 0, -1):
       A[j-1] = j*(A[j-1] - A[j])
-  return A[0].numerator*1./A[0].denominator # (which is Bn
+  return A[0].numerator*1./A[0].denominator # (which is Bn)
+
+
+def VecToJac(vec):
+  """ 
+  Construction of the J matrix
+  @param vec: a 3x1 vector for SO3 or a 6x1 vector for SE3 (input)
+  @param J:   a 3x3 J matrix for SO3 or a 6x6 J matrix for SE3 (output)
+  """
+  tiny = 1e-12
+  if vec.shape[0] == 3: # Jacobian of SO3
+    phi = vec
+    nr = np.linalg.norm(phi)
+    if nr < tiny:
+      # If the angle is small, fall back on the series representation
+      JSO3 = VecToJacSeries(phi,10)
+    else:
+      axis = phi/nr
+      cnr = np.cos(nr)
+      snr = np.sin(nr)
+      JSO3 = (snr/nr)*np.eye(3) + (1-snr/nr)*axis[np.newaxis]*axis[np.newaxis].T + ((1-cnr)/nr)*Hat(axis)
+    return JSO3
+  elif vec.shape[0] == 6: # Jacobian 
