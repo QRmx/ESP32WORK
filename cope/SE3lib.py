@@ -415,4 +415,28 @@ def VecToQ(vec):
   if nr == 0:
     nr = 1e-12
   nr2 = nr*nr
-  nr3 = n
+  nr3 = nr2*nr
+  nr4 = nr3*nr
+  nr5 = nr4*nr
+  
+  cnr = np.cos(nr)
+  snr = np.sin(nr)
+  
+  rx = Hat(rho)
+  px = Hat(phi)
+  
+  t1 = 0.5*rx
+  t2 = ((nr-snr)/nr3)*(np.dot(px,rx) + np.dot(rx,px) + np.dot(np.dot(px,rx),px))
+  m3 = (1-0.5*nr2 - cnr)/nr4
+  t3 = -m3*(np.dot(np.dot(px,px),rx) +np.dot(np.dot(rx,px),px) -3*np.dot(np.dot(px,rx),px))
+  m4 = 0.5*(m3 - 3*(nr - snr -nr3/6)/nr5)
+  t4 = -m4*(np.dot(px,np.dot(np.dot(rx,px),px)) + np.dot(px,np.dot(np.dot(px,rx),px)))
+  Q = t1 + t2 + t3 + t4
+  return Q
+
+
+def VecToTran(vec):
+  """
+  Build a transformation matrix using the exponential map, closed form
+  @param vec: 6x1 vector (input)
+  @param T:   4x4 transformation 
