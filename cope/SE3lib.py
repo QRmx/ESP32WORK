@@ -439,4 +439,36 @@ def VecToTran(vec):
   """
   Build a transformation matrix using the exponential map, closed form
   @param vec: 6x1 vector (input)
-  @param T:   4x4 transformation 
+  @param T:   4x4 transformation matrix (output)
+  """
+  rho = vec[:3]
+  phi = vec[3:]
+  
+  C = VecToRot(phi)
+  JSO3 = VecToJac(phi)
+  
+  T = np.eye(4)
+  T[:3,:3] = C
+  T[:3,3] = np.dot(JSO3,rho)
+  return T
+
+
+def VecToTranSeries(p, N):
+  """
+  Build a transformation matrix using the exponential map series with N elements in the series
+  @param p: 6x1 vector (input)
+  @param N: number of terms to include in the series (input)
+  @param T: 4x4 transformation matrix (output)
+  """
+  T = np.eye(4)
+  xM = np.eye(4)
+  bpP = Hat(p)
+  for n in range(N):
+    xM = np.dot(xM, bpP/(n+1))
+    T = T + xM
+  return T
+
+
+def Propagating(T1, sigma1, T2, sigma2, method = 2):
+  """
+  Find the total uncertainty in a compound spatial relation (Compounding two uncertain t
