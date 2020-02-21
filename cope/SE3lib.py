@@ -510,4 +510,22 @@ def Propagating(T1, sigma1, T2, sigma2, method = 2):
     A2[3:,3:] = CovOp1(sigma2pp)
 
     Brr = CovOp2(sigma1pp,sigma2rr) + CovOp2(sigma1rp.T,sigma2rp) + CovOp2(sigma1rp,sigma2rp.T) + CovOp2(sigma1rr,sigma2pp)
-    Brp = CovOp2(sigma1pp,sigma2rp.T) + Co
+    Brp = CovOp2(sigma1pp,sigma2rp.T) + CovOp2(sigma1rp.T,sigma2pp)
+    Bpp = CovOp2(sigma1pp, sigma2pp)
+    
+    B = np.zeros((6,6))
+    B[:3,:3] = Brr
+    B[:3,3:] = Brp
+    B[3:,:3] = Brp.T
+    B[3:,3:] = Bpp
+    
+    sigma = sigma1 + sigma2prime + 1/12.*(np.dot(A1,sigma2prime)+np.dot(sigma2prime,A1.T) + np.dot(sigma1,A2) + np.dot(sigma1,A2.T)) + B/4.   
+  return T, sigma
+
+def PropagatingWithSeparateRotTrans(R1,sigmaR1,t1,sigmat1,R2,sigmaR2,t2,sigmat2):
+    """
+    Find the total uncertainty in a compound spatial relation (Compounding two uncertain transformations) where we separate rotation and translation
+    @param sigmaR1,sigmaR2: cov of Rot vec (RotToVec(T[:3,:3]))
+    @param sigmat1,sigamt2: cov of Trans vec (T[:3,3])
+    """
+    # Compound the means
