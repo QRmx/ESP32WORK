@@ -471,4 +471,21 @@ def VecToTranSeries(p, N):
 
 def Propagating(T1, sigma1, T2, sigma2, method = 2):
   """
-  Find the total uncertainty in a compound spatial relation (Compounding two uncertain t
+  Find the total uncertainty in a compound spatial relation (Compounding two uncertain transformations)
+  @param T1:     4x4 mean of left transformation 
+  @param sigma1: 6x6 covariance of left transformation
+  @param T2:     4x4 mean of right transformation
+  @param sigma2: 6x6 covariance of right transformations
+  @param method: an integer indicating the method to be used to perform compounding
+                 (1=second-order, 2=fourth-order)
+  @param T:      4x4 mean of compounded transformation (output)
+  @param sigma:  6x6 covariance of compounded transformation (output)
+  """
+  # Compound the means
+  T = np.dot(T1,T2)
+  # Compute Adjoint of transformation T1
+  AdT1 = TranAd(T1)
+  sigma2prime = np.dot(np.dot(AdT1,sigma2),AdT1)
+  if method == 1:
+    # Second-order method
+    sigma = sigma1 + sigma2prime
