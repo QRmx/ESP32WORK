@@ -488,4 +488,26 @@ def Propagating(T1, sigma1, T2, sigma2, method = 2):
   sigma2prime = np.dot(np.dot(AdT1,sigma2),AdT1)
   if method == 1:
     # Second-order method
-    sigma = sigma1 + sigma2prime
+    sigma = sigma1 + sigma2prime    
+  elif method == 2:
+    # Fourth-order method
+    sigma1rr = sigma1[:3,:3]
+    sigma1rp = sigma1[:3,3:]
+    sigma1pp = sigma1[3:,3:]
+    
+    sigma2rr = sigma2prime[:3,:3]
+    sigma2rp = sigma2prime[:3,3:]
+    sigma2pp = sigma2prime[3:,3:]
+    
+    A1 = np.zeros((6,6))
+    A1[:3,:3] = CovOp1(sigma1pp)
+    A1[:3,3:] = CovOp1(sigma1rp + sigma1rp.T)
+    A1[3:,3:] = CovOp1(sigma1pp)
+    
+    A2 = np.zeros((6,6))
+    A2[:3,:3] = CovOp1(sigma2pp)
+    A2[:3,3:] = CovOp1(sigma2rp + sigma2rp.T)
+    A2[3:,3:] = CovOp1(sigma2pp)
+
+    Brr = CovOp2(sigma1pp,sigma2rr) + CovOp2(sigma1rp.T,sigma2rp) + CovOp2(sigma1rp,sigma2rp.T) + CovOp2(sigma1rr,sigma2pp)
+    Brp = CovOp2(sigma1pp,sigma2rp.T) + Co
