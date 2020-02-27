@@ -529,3 +529,20 @@ def PropagatingWithSeparateRotTrans(R1,sigmaR1,t1,sigmat1,R2,sigmaR2,t2,sigmat2)
     @param sigmat1,sigamt2: cov of Trans vec (T[:3,3])
     """
     # Compound the means
+    R = np.dot(R1,R2)
+    t = np.dot(R1,t2)+t1
+    # Compute the cov of the compounding rot
+    sigmaR2prime = np.dot(np.dot(R1,sigmaR2),np.transpose(R1))
+    A1 = CovOp1(sigmaR1)
+    A2 = CovOp1(sigmaR2prime)
+    B = CovOp2(sigmaR1, sigmaR2prime)
+    sigmaR = sigmaR1 + sigmaR2prime + 1/12.*(np.dot(A1,sigmaR2prime) + np.dot(sigmaR2prime,A1.T) + np.dot(sigmaR1,A2) + np.dot(sigmaR1,A2.T)) + B/4.
+    # Compute the cov of teh compounding trans
+    R1t2 = np.dot(R1,t2)
+    sigmat = sigmat1 + np.dot(np.dot(R1,sigmat2),np.transpose(R1)) + np.dot(np.dot(Hat(R1t2),sigmaR1),np.transpose(Hat(R1t2)))
+    return R, sigmaR, t, sigmat
+
+
+def Fusing(Tlist, sigmalist, N = 0, maxiterations=30, retiter=False):
+  """
+  Find th
