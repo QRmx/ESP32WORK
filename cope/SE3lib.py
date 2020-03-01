@@ -545,4 +545,21 @@ def PropagatingWithSeparateRotTrans(R1,sigmaR1,t1,sigmat1,R2,sigmaR2,t2,sigmat2)
 
 def Fusing(Tlist, sigmalist, N = 0, maxiterations=30, retiter=False):
   """
-  Find th
+  Find the total uncertainty in a compound spatial relation (Compounding two uncertain transformations)
+  @param Tlist:     a list of 4x4 transformations
+  @param sigmalist: a list of corresponding 6x6 covariance matrices
+  @param N:         N == 0(default):JacInv is computed analytically using eq. 100
+                    N != 0: JacInv is computed using eq. 103, using N first terms in the eq.
+  @param T:      4x4 mean of fused transformation (output)
+  @param sigma:  6x6 covariance of fused transformation (output)
+  """
+  assert len(Tlist) == len(sigmalist), "Invalid data list length\n"
+  kmax = len(Tlist)
+  
+  T = Tlist[0]
+  Vprv = 0
+  for i in range(maxiterations): # Gauss-Newton iterations
+    LHS = np.zeros(6)
+    RHS = np.zeros(6)
+    for k in range(kmax):
+      xik = TranToVec
