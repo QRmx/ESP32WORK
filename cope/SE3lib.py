@@ -588,4 +588,24 @@ def Fusing(Tlist, sigmalist, N = 0, maxiterations=30, retiter=False):
   else:
     return T, sigma
 
-def CovIn
+def CovInverseTran(T,sigma):
+    """
+    Compute the cov of the inverse transformation. (Follow Ethan Eade's note on lie group.)
+    """
+    Tinv = np.linalg.inv(T)
+    AdTinv = TranAd(Tinv)
+    sigmaTinv = np.dot(np.dot(AdTinv,sigma),np.transpose(AdTinv))
+    return Tinv, sigmaTinv
+
+def CovInverseTranWithSeparateRotTrans(R,sigmaR,t,sigmat):
+    """
+    Compute the cov of the inverse transformation where Rot and Trans 's noises are assumed to be independent
+    """
+    Rinv = np.linalg.inv(R)
+    tinv = -np.dot(Rinv,t)
+    sigmaRinv = sigmaR
+    hatRinvt = Hat(np.dot(Rinv,t))
+    sigmatinv = np.dot(np.dot(hatRinvt,sigmaRinv),np.transpose(hatRinvt)) + np.dot(np.dot(Rinv,sigmat),R)
+    return Rinv, sigmaRinv, tinv, sigmatinv
+
+def V
