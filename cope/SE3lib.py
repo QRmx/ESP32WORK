@@ -626,4 +626,26 @@ def Visualize(Tlist,sigmalist, nsamples = 100):
     Tsample = []
     for k in range(nsamples):
       vecsample = np.dot(cholsigma,np.random.randn(6,1))
-      #vecsample
+      #vecsample = np.dot(cholsigma, np.random.uniform(-1,1,size = 6))
+      vecsample.resize(6)
+      Tsample = np.dot(VecToTran(vecsample), Tlist[i])
+      ax.scatter(Tsample[0,3],Tsample[1,3],Tsample[2,3], c = color)
+
+  ax.set_autoscaley_on(False)
+  ax.set_xlim([-0.5, 0.5])
+  ax.set_ylim([-0.5, 0.5])
+  ax.set_zlim([-0.5, 0.5])
+  ax.set_xlabel('X Label')
+  ax.set_ylabel('Y Label')
+  ax.set_zlabel('Z Label')
+  plt.show(False)
+  return True
+
+
+def IsInside(point, center, sigma):
+  """
+  Check whether a point (transformation) is in the region formed by (center,sigma) or not 
+  """
+  cholsigma = np.linalg.cholesky(sigma).T
+  univariable = np.dot(np.linalg.inv(cholsigma),(point-center))
+  nr = np.linalg.norm(univariable)
