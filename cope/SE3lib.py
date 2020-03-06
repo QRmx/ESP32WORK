@@ -608,4 +608,22 @@ def CovInverseTranWithSeparateRotTrans(R,sigmaR,t,sigmat):
     sigmatinv = np.dot(np.dot(hatRinvt,sigmaRinv),np.transpose(hatRinvt)) + np.dot(np.dot(Rinv,sigmat),R)
     return Rinv, sigmaRinv, tinv, sigmatinv
 
-def V
+def Visualize(Tlist,sigmalist, nsamples = 100):
+  """
+  Visualize an estimation (a point will be used to represent the translation position of a transformation)
+  @param Tlist:     a list of Transformations
+  @param sigmalist: a list of corresponding sigmas
+  @param nsamples:  the number of samples generated for each (T,sigma)
+  """
+  import matplotlib.cm as cm
+  fig = plt.figure()
+  ax = fig.add_subplot(111, projection='3d')
+  cholsigmalist = []
+  colors = iter(cm.rainbow(np.linspace(0, 1, len(Tlist))))
+  for i in range(len(sigmalist)):
+    color = next(colors)
+    cholsigma = np.linalg.cholesky(sigmalist[i]).T
+    Tsample = []
+    for k in range(nsamples):
+      vecsample = np.dot(cholsigma,np.random.randn(6,1))
+      #vecsample
