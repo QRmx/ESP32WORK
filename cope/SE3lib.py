@@ -649,3 +649,34 @@ def IsInside(point, center, sigma):
   cholsigma = np.linalg.cholesky(sigma).T
   univariable = np.dot(np.linalg.inv(cholsigma),(point-center))
   nr = np.linalg.norm(univariable)
+  if nr <= 1.0:
+    return True
+  else:
+    return False
+
+class Pose():
+  # SE3 pose where Rot and Trans are separated.
+  def __init__(self,rot, sigmarot, trans,sigmatrans):
+    self.rot = rot
+    self.trans = trans
+    self.sigmarot = sigmarot
+    self.sigmatrans = sigmatrans
+    self.transform = np.eye(4)
+    self.transform[:3,:3] = rot
+    self.transform[:3,3] = trans
+
+  # def transform(self):
+  #   transform = np.eye(4)
+  #   transform[:3,:3] = self.rot
+  #   transform[:3,3] = self.trans
+  #   return transform
+
+def ConstPose(T):
+  '''
+  Return a pose obj w no covariance matrix. input: a 4x4 matrix
+  '''
+  sigmarot = np.zeros((3,3))
+  sigmatrans = np.zeros((3,3))
+  return Pose(T[:3,:3], sigmarot, T[:3,3],sigmatrans)
+
+def UpdatePose(
