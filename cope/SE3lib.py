@@ -698,4 +698,5 @@ def Inverse(pose):
   Return the inverse and cov of the the inverse transformation
   '''
   UpdatePose(pose)
-  R, sigmaR, t, si
+  R, sigmaR, t, sigmat = CovInverseTranWithSeparateRotTrans(pose.rot,pose.sigmarot,pose.trans,pose.sigmatrans)
+  return Pose(R, sigmaR, t, sigmat)
