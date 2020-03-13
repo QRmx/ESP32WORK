@@ -79,4 +79,24 @@ def EvenDensityCover(region, M):
         new_p[:3,:3] = SE3.VecToRot(new_vec_rot)
         new_p[:3,3] = new_vec_trans
         particles.append(new_p)
-  return particl
+  return particles
+
+def normalize(weights):
+  norm_weights = np.zeros(len(weights))
+  sum_weights = np.sum(weights)
+  if sum_weights == 0:
+    return np.ones(len(weights))/len(weights)
+  for i in range(len(weights)):
+    norm_weights[i] = weights[i]/sum_weights
+  return norm_weights
+
+def ComputeNormalizedWeightsB(mesh,sorted_face,particles,measurements,pos_err,nor_err,tau):
+  num_particles = len(particles)
+  new_weights = np.zeros(num_particles)
+  for i in range(len(particles)):
+    T = np.linalg.inv(particles[i])
+    D = copy.deepcopy(measurements)
+    for d in D:
+      d[0] = np.dot(T[:3,:3],d[0]) + T[:3,3]
+      d[1] = np.dot(T[:3,:3],d[1])
+    total_energy = sum([FindminimumDistanceMeshOriginal(mesh,sorted_fa
