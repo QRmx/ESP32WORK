@@ -99,4 +99,20 @@ def ComputeNormalizedWeightsB(mesh,sorted_face,particles,measurements,pos_err,no
     for d in D:
       d[0] = np.dot(T[:3,:3],d[0]) + T[:3,3]
       d[1] = np.dot(T[:3,:3],d[1])
-    total_energy = sum([FindminimumDistanceMeshOriginal(mesh,sorted_fa
+    total_energy = sum([FindminimumDistanceMeshOriginal(mesh,sorted_face,measurement,pos_err,nor_err)**2 for measurement in D])
+    new_weights[i] = (np.exp(-0.5*total_energy/tau))
+  return normalize(new_weights)
+
+def ComputeNormalizedWeights(mesh,sorted_face,particles,measurements,pos_err,nor_err,tau):
+  num_particles = len(particles)
+  new_weights = np.zeros(num_particles)
+  for i in range(len(particles)):
+    T = np.linalg.inv(particles[i])
+    D = copy.deepcopy(measurements)
+    for d in D:
+      d[0] = np.dot(T[:3,:3],d[0]) + T[:3,3]
+      d[1] = np.dot(T[:3,:3],d[1])
+    total_energy = sum([FindminimumDistanceMesh(mesh,sorted_face,measurement,pos_err,nor_err)**2 for measurement in D])
+    new_weights[i] = (np.exp(-0.5*total_energy/tau))
+  
+  return normalize(new_weight
