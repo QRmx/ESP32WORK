@@ -115,4 +115,24 @@ def ComputeNormalizedWeights(mesh,sorted_face,particles,measurements,pos_err,nor
     total_energy = sum([FindminimumDistanceMesh(mesh,sorted_face,measurement,pos_err,nor_err)**2 for measurement in D])
     new_weights[i] = (np.exp(-0.5*total_energy/tau))
   
-  return normalize(new_weight
+  return normalize(new_weights)
+
+
+def FindminimumDistanceMesh(mesh,sorted_face,measurement,pos_err,nor_err):
+    ref_vec = sorted_face[2]
+    sorted_angle = sorted_face[1]
+    face_idx = sorted_face[0]
+    angle =  np.arccos(np.dot(measurement[1],ref_vec))
+    idx = bisect.bisect_right(sorted_angle,angle)
+    if idx >= len(sorted_angle):
+      up_bound = idx
+    else:
+      up_bound = idx + bisect.bisect_right(sorted_angle[idx:],sorted_angle[idx]+sorted_angle[idx]-angle+nor_err)
+    if idx == 0:
+      low_bound = 0
+    else:
+      low_bound = bisect.bisect_left(sorted_angle[:idx],sorted_angle[idx-1]-(sorted_angle[idx-1]-angle)-nor_err)-1
+    dist = []
+    for i in range(low_bound,up_bound):
+        A,B,C = mesh.faces[face_idx[i]]
+        dist.append(CalculateDistanceFa
