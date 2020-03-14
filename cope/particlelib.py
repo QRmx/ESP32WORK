@@ -135,4 +135,20 @@ def FindminimumDistanceMesh(mesh,sorted_face,measurement,pos_err,nor_err):
     dist = []
     for i in range(low_bound,up_bound):
         A,B,C = mesh.faces[face_idx[i]]
-        dist.append(CalculateDistanceFa
+        dist.append(CalculateDistanceFace([mesh.vertices[A],mesh.vertices[B],mesh.vertices[C],mesh.face_normals[face_idx[i]]],measurement,pos_err,nor_err))
+    return min(dist)
+
+def FindminimumDistanceMeshOriginal(mesh,sorted_face,measurement,pos_err,nor_err):
+    dist = []
+    for i in range(len(mesh.faces)):
+        A,B,C = mesh.faces[i]
+        dist.append(CalculateDistanceFace([mesh.vertices[A],mesh.vertices[B],mesh.vertices[C],mesh.face_normals[i]],measurement,pos_err,nor_err))
+    return min(dist)
+
+def CalculateDistanceFace(face,measurement,pos_err,nor_err):
+    p1,p2,p3,nor = face
+    pos_measurement = measurement[0]
+    nor_measurement = measurement[1]
+    norm = lambda x: np.linalg.norm(x)
+    inner = lambda a, b: np.inner(a,b)
+    clos
