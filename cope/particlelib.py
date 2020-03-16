@@ -151,4 +151,18 @@ def CalculateDistanceFace(face,measurement,pos_err,nor_err):
     nor_measurement = measurement[1]
     norm = lambda x: np.linalg.norm(x)
     inner = lambda a, b: np.inner(a,b)
-    clos
+    closest_point = trimesh.triangles.closest_point([[p1,p2,p3]],[pos_measurement])
+    diff_distance = norm(closest_point-pos_measurement)
+    diff_angle    = np.arccos(inner(nor, nor_measurement)/norm(nor)/norm(nor_measurement))
+    dist = np.sqrt(diff_distance**2/pos_err**2+diff_angle**2/nor_err**2)
+    return dist
+
+def CalculateMahaDistanceFace(face,measurement,pos_err,nor_err):
+  p1,p2,p3,nor = face
+  pos_measurement = measurement[0]
+  nor_measurement = measurement[1]
+  norm = lambda x: np.linalg.norm(x)
+  inner = lambda a, b: np.inner(a,b)
+  diff_distance   = norm(inner((pos_measurement-p1), nor)/norm(nor))
+  diff_angle      = np.arccos(inner(nor, nor_measurement)/norm(nor)/norm(nor_measurement))
+  dist = np.sqrt(diff_di
