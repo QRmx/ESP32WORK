@@ -210,4 +210,24 @@ def Pruning_old(list_particles, weights,prune_percentage):
       pruned_list.append(list_particles[i])
   return pruned_list
 
-def Visualize(mesh,parti
+def Visualize(mesh,particle,D=[]):
+  show_ = mesh.copy()
+  show_.apply_transform(particle)
+  color = np.array([  21, 51,  252, 255])
+  for face in show_.faces:
+    show_.visual.face_colors[face] = color
+  for facet in show_.facets:
+    show_.visual.face_colors[facet] = color
+  for d in D:
+    sphere = trimesh.creation.icosphere(3,0.0025)
+    TF = np.eye(4)
+    TF[:3,3] = d[0]
+    TF2 = np.eye(4)
+    angle = np.arccos(np.dot(d[1],np.array([0,0,1])))
+    vec = np.cross(d[1],np.array([0,0,1]))
+    TF2[:3,:3] = SE3.VecToRot(angle*vec)
+    TF2[:3,3] = d[0] + np.dot(SE3.VecToRot(angle*vec),np.array([0,0,0.1/2.]))
+    sphere.apply_transform(TF)
+    show_ += sphere
+  show_.show()
+  return True
