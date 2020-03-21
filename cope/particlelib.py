@@ -231,3 +231,19 @@ def Visualize(mesh,particle,D=[]):
     show_ += sphere
   show_.show()
   return True
+
+def Volume(radius,dim):
+  return (np.pi**(dim/2.))/sp.special.gamma(dim/2.+1)*(radius**dim)
+
+
+def ScalingSeriesB(mesh,sorted_face, particles0, measurements, pos_err, nor_err, M, sigma0, sigma_desired, prune_percentage = 0.6,dim = 6, visualize = False):
+  """
+  @type  V0:  ParticleFilterLib.Region
+  @param V0:  initial uncertainty region
+  @param  D:  a list of measurements [p,n,o_n,o_p] p is the contacted point, n is the approaching vector (opposite to normal)
+  @param  M:  the no. of particles per neighborhood
+  @param delta_desired: terminal value of delta
+  @param dim: dimension of the state space (6 DOFs)
+  """ 
+  zoom = 2**(-1./6.)
+  delta_rot = np.max(np.linalg.cholesky(sigma0[3:,3:]).T)
