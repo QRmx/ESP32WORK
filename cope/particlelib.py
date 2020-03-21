@@ -247,3 +247,20 @@ def ScalingSeriesB(mesh,sorted_face, particles0, measurements, pos_err, nor_err,
   """ 
   zoom = 2**(-1./6.)
   delta_rot = np.max(np.linalg.cholesky(sigma0[3:,3:]).T)
+  delta_trans = np.max(np.linalg.cholesky(sigma0[:3,:3]).T)
+  delta_desired_rot = np.max(np.linalg.cholesky(sigma_desired[3:,3:]).T)
+  delta_desired_trans = np.max(np.linalg.cholesky(sigma_desired[:3,:3]).T)
+  N_rot  = np.log2(Volume(delta_rot,3)/Volume(delta_desired_rot,3))
+  N_trans = np.log2(Volume(delta_trans,3)/Volume(delta_desired_trans,3))
+  N = int(np.round(max(N_rot,N_trans)))
+  particles = particles0
+  V = Region(particles,delta_rot,delta_trans)
+  t1 = 0.
+  t2 = 0.
+  t3 = 0.
+  sum_num_particles = 0
+  for n in range(N):
+    delta_rot = delta_rot*zoom
+    delta_trans = delta_trans*zoom
+    tau = (delta_trans/delta_desired_trans)**(2./1.)
+    # Sample new set of particles based on 
