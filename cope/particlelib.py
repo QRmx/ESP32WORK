@@ -305,4 +305,17 @@ def ScalingSeries(mesh,sorted_face, particles0, measurements, pos_err, nor_err, 
     delta_trans = delta_trans*zoom
     tau = (delta_trans/delta_desired_trans)**(2./1.)  
     # Sample new set of particles based on from previous region and M
-    particles = Even
+    particles = EvenDensityCover(V,M)
+    # print "len of new generated particles ", len(particles)
+    # print 'tau ', tau
+    # Compute normalized weights
+    weights = ComputeNormalizedWeights(mesh,sorted_face,particles,measurements,pos_err,nor_err,tau)
+    # Prune based on weights
+    pruned_particles = Pruning_old(particles,weights,prune_percentage)     
+    # print 'No. of particles, after pruning:', len(pruned_particles)
+    # Create a new region from the set of particle left after pruning
+    V = Region(pruned_particles,delta_rot,delta_trans)
+    # if visualize:
+    #   Visualize(mesh,particles,measurements)
+  new_set_of_particles =  EvenDensityCover(V,M)
+  new_weights = ComputeNormalizedWeights(mesh,sorted_face,new_set_of_pa
