@@ -336,4 +336,17 @@ def GenerateMeasurementsTriangleSampling(mesh,pos_err,nor_err,num_measurements):
   # face_index = np.searchsorted(area_cum, face_pick)
 
   face_w_normal_up = []
-  for i in range(len(mes
+  for i in range(len(mesh.faces)):
+    if np.dot(mesh.face_normals[i],np.array((0,0,1))) >= -0.1:
+      face_w_normal_up.append(i)
+  face_index = np.random.choice(face_w_normal_up,num_measurements)
+  # pull triangles into the form of an origin + 2 vectors
+  tri_origins = mesh.triangles[:, 0]
+  tri_vectors = mesh.triangles[:, 1:].copy()
+  tri_vectors -= np.tile(tri_origins, (1, 2)).reshape((-1, 2, 3))
+  # pull the vectors for the faces we are going to sample from
+  tri_origins = tri_origins[face_index]
+  tri_vectors = tri_vectors[face_index]
+  # randomly generate two 0-1 scalar components to multiply edge vectors by
+  random_lengths = np.random.random((len(tri_vectors), 2, 1))
+  # points will be distributed on a
