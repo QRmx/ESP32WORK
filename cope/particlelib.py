@@ -349,4 +349,18 @@ def GenerateMeasurementsTriangleSampling(mesh,pos_err,nor_err,num_measurements):
   tri_vectors = tri_vectors[face_index]
   # randomly generate two 0-1 scalar components to multiply edge vectors by
   random_lengths = np.random.random((len(tri_vectors), 2, 1))
-  # points will be distributed on a
+  # points will be distributed on a quadrilateral if we use 2 0-1 samples
+  # if the two scalar components sum less than 1.0 the point will be
+  # inside the triangle, so we find vectors longer than 1.0 and
+  # transform them to be inside the triangle
+  random_test = random_lengths.sum(axis=1).reshape(-1) > 1.0
+  random_lengths[random_test] -= 1.0
+  random_lengths = np.abs(random_lengths)
+  # multiply triangle edge vectors by the random lengths and sum
+  sample_vector = (tri_vectors * random_lengths).sum(axis=1)
+  # finally, offset by the origin to generate
+  # (n,3) points in space on the triangle
+  samples = sample_vector + tri_origins
+  normals = mesh.face_normals[face_index]
+  ## Transform points and add noise
+  # po
