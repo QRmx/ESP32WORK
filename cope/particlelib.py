@@ -318,4 +318,22 @@ def ScalingSeries(mesh,sorted_face, particles0, measurements, pos_err, nor_err, 
     # if visualize:
     #   Visualize(mesh,particles,measurements)
   new_set_of_particles =  EvenDensityCover(V,M)
-  new_weights = ComputeNormalizedWeights(mesh,sorted_face,new_set_of_pa
+  new_weights = ComputeNormalizedWeights(mesh,sorted_face,new_set_of_particles,measurements,pos_err,nor_err,1)
+  return new_set_of_particles, new_weights
+
+
+def GenerateMeasurementsTriangleSampling(mesh,pos_err,nor_err,num_measurements):
+  ## Generate random points on obj surfaces using triangle sampling
+  # For individual triangle sampling uses this method:
+  # http://mathworld.wolfram.com/TrianglePointPicking.html
+  # # len(mesh.faces) float array of the areas of each face of the mesh
+  # area = mesh.area_faces
+  # # total area (float)
+  # area_sum = np.sum(area)
+  # # cumulative area (len(mesh.faces))
+  # area_cum = np.cumsum(area)
+  # face_pick = np.random.random(num_measurements)*area_sum
+  # face_index = np.searchsorted(area_cum, face_pick)
+
+  face_w_normal_up = []
+  for i in range(len(mes
