@@ -363,4 +363,13 @@ def GenerateMeasurementsTriangleSampling(mesh,pos_err,nor_err,num_measurements):
   samples = sample_vector + tri_origins
   normals = mesh.face_normals[face_index]
   ## Transform points and add noise
-  # po
+  # point_errs = np.random.multivariate_normal(np.zeros(3),np.eye(3),num_measurements)
+  random_vecs = np.random.uniform(-1,1,(num_measurements,3))
+  point_errs = np.asarray([np.random.normal(0.,np.sqrt(3)*pos_err)*random_vec/np.linalg.norm(random_vec) for random_vec in random_vecs])
+  noisy_points = copy.deepcopy(samples) + point_errs
+  noisy_normals = [np.dot(tr.rotation_matrix(np.random.normal(0.,nor_err),np.cross(np.random.uniform(-1,1,3),n))[:3,:3],n) for n in normals]
+  noisy_normals = np.asarray([noisy_n/np.linalg.norm(noisy_n) for noisy_n in noisy_normals])
+  dist = [np.linalg.norm(point_err) for point_err in point_errs]
+  alpha = [np.arccos(np.dot(noisy_normals[i],normals[i])) for i in range(len(normals))]
+
+  measurements = [[noisy_points[i],noisy_normals[i]] for i in range(num
