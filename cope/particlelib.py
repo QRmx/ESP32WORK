@@ -391,4 +391,25 @@ def NormalHashing(obj,num_random_unit,plot_histogram):
     hist,bin_edges = np.histogram(angle_dict,range=(0,np.pi),density=True)
     normalized_hist = hist/np.sum(hist)
     if sp.stats.entropy(normalized_hist) > entropy: #histogram with bigger shannon entropy is selected
-      entropy = sp.stats.entropy(normali
+      entropy = sp.stats.entropy(normalized_hist)
+      sorted_dict = [sorted(mesh,key=lambda f: f[1]),ref_axis]
+      toshow = normalized_hist,bin_edges
+  # print 'Selected unit vec:',sorted_dict[1]
+  # print 'Entropy:', entropy
+
+  if plot_histogram:
+    fig = plt.figure()
+    ax1 = fig.add_subplot(211)
+    width = 0.7*(toshow[1][1] - toshow[1][0])
+    center = (toshow[1][:-1] + toshow[1][1:])/2.
+    ax1.bar(center, toshow[0], align='center', width=width)
+    ax1.set_title("Hist of selected unit vec")
+
+    ax2 = fig.add_subplot(212)
+    width = 0.7*(bin_edges[1] - bin_edges[0])
+    center = (bin_edges[:-1] + bin_edges[1:])/2.
+    ax2.bar(center, normalized_hist, align='center', width=width)
+    ax2.set_title("Hist of a random unit vec")
+    fig.tight_layout()
+    plt.show(True)
+ 
