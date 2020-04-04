@@ -372,4 +372,23 @@ def GenerateMeasurementsTriangleSampling(mesh,pos_err,nor_err,num_measurements):
   dist = [np.linalg.norm(point_err) for point_err in point_errs]
   alpha = [np.arccos(np.dot(noisy_normals[i],normals[i])) for i in range(len(normals))]
 
-  measurements = [[noisy_points[i],noisy_normals[i]] for i in range(num
+  measurements = [[noisy_points[i],noisy_normals[i]] for i in range(num_measurements)]
+  return measurements #note that the normals here are sampled on obj surfaces
+
+
+def NormalHashing(obj,num_random_unit,plot_histogram):
+  entropy = 0.
+  for k in range(num_random_unit):
+    randR = tr.random_rotation_matrix()
+    ref_axis = np.dot(randR[:3,:3],np.array([0.,0.,1.]))   
+    mesh = []
+    angle_dict = []
+    for i in range(len(obj.faces)):
+      n = obj.face_normals[i]
+      angle = np.arccos(np.dot(n,ref_axis))
+      angle_dict.append(angle)
+      mesh.append([i,angle])
+    hist,bin_edges = np.histogram(angle_dict,range=(0,np.pi),density=True)
+    normalized_hist = hist/np.sum(hist)
+    if sp.stats.entropy(normalized_hist) > entropy: #histogram with bigger shannon entropy is selected
+      entropy = sp.stats.entropy(normali
