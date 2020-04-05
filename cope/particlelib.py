@@ -412,4 +412,17 @@ def NormalHashing(obj,num_random_unit,plot_histogram):
     ax2.set_title("Hist of a random unit vec")
     fig.tight_layout()
     plt.show(True)
- 
+  face_idx = [sorted_dict[0][i][0] for i in range(len(sorted_dict[0]))]
+  angle_list = [sorted_dict[0][i][1] for i in range(len(sorted_dict[0]))]
+  mesh_w_sorted_dict = [face_idx,angle_list,sorted_dict[1]]
+  return mesh_w_sorted_dict # A list [[sorted_face_idx,angle],ref_axis]
+
+def RunImprovedScalingSeries(mesh,sorted_face, ptcls0, measurements, pos_err, nor_err, M, sigma0, sigma_desired, prune_percentage,dim = 6, visualize = False):
+   list_particles, weights = ScalingSeries(mesh,sorted_face, ptcls0, measurements, pos_err, nor_err, M, sigma0, sigma_desired, prune_percentage,dim = 6, visualize = False) 
+   maxweight = weights[0]
+   for w in weights:
+     if w > maxweight:
+       maxweight = w   
+   acum_weight = 0
+   acum_vec = np.zeros(6)
+   we
