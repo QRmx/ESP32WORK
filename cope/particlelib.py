@@ -438,4 +438,22 @@ def RunScalingSeries(mesh,sorted_face, ptcls0, measurements, pos_err, nor_err, M
    list_particles, weights = ScalingSeriesB(mesh,sorted_face, ptcls0, measurements, pos_err, nor_err, M, sigma0, sigma_desired, prune_percentage,dim = 6, visualize = False) 
    maxweight = weights[0]
    for w in weights:
-     if w > maxwei
+     if w > maxweight:
+       maxweight = w   
+   acum_weight = 0
+   acum_vec = np.zeros(6)
+   weight_threshold = 0.7*maxweight
+   for i in range(len(list_particles)):
+     if weights[i] > weight_threshold:
+       p = SE3.TranToVec(list_particles[i])
+       acum_vec += p*weights[i]
+       acum_weight += weights[i]
+   estimated_particle = acum_vec*(1./acum_weight)
+   return SE3.VecToTran(estimated_particle)
+
+def MeasurementFitHypothesis(hypothesis,measurement,pos_err,nor_err,mesh,sorted_face,distance_threshold):
+  d = copy.deepcopy(measurement)
+  T_inv = np.linalg.inv(hypothesis)
+  d[0] = np.dot(T_inv[:3,:3],d[0]) + T_inv[:3,3]
+  d[1] = np.dot(T_inv[:3,:3],d[1])
+  dist = FindminimumDistanceMeshOriginal(mesh,
