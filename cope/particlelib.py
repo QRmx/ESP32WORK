@@ -456,4 +456,27 @@ def MeasurementFitHypothesis(hypothesis,measurement,pos_err,nor_err,mesh,sorted_
   T_inv = np.linalg.inv(hypothesis)
   d[0] = np.dot(T_inv[:3,:3],d[0]) + T_inv[:3,3]
   d[1] = np.dot(T_inv[:3,:3],d[1])
-  dist = FindminimumDistanceMeshOriginal(mesh,
+  dist = FindminimumDistanceMeshOriginal(mesh,sorted_face,d,pos_err,nor_err)
+  if dist < distance_threshold:
+    return True
+  else: 
+    return False
+
+def ScoreHypothesis(hypothesis,measurements,pos_err,nor_err,mesh,sorted_face):
+  data = copy.deepcopy(measurements)
+  T_inv = np.linalg.inv(hypothesis)
+  dist = 0.
+  for d in data:
+    d[0] = np.dot(T_inv[:3,:3],d[0]) + T_inv[:3,3]
+    d[1] = np.dot(T_inv[:3,:3],d[1])
+  dist = sum([FindminimumDistanceMeshOriginal(mesh,sorted_face,d,pos_err,nor_err) for d in data])
+  score = dist/len(measurements)
+  return score
+
+def SelectRandomSubset(measurements,size,dist_angle_th):
+  if size <= 1:
+    # print 'Too few!'
+    quit()
+  all_idx = range(num_measurements)
+  subset_idx = []
+  while len(subs
