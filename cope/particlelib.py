@@ -479,4 +479,23 @@ def SelectRandomSubset(measurements,size,dist_angle_th):
     quit()
   all_idx = range(num_measurements)
   subset_idx = []
-  while len(subs
+  while len(subset_idx) < size and len(all_idx)>0:
+    i = random.sample(all_idx,1)[0]
+    dist_angle = [np.arccos(np.dot(measurements[i][1],measurements[idx][1])) for idx in subset_idx]
+    too_close = []
+    for k in range(len(dist_angle)):
+      if dist_angle[k] > dist_angle_th:
+        too_close.append(k) 
+    if len(too_close) < 0.5*size: 
+      subset_idx.append(i)
+    all_idx.remove(i)
+  # print subset_idx
+  return subset_idx
+
+def RansacParticle(n,k,threshold,d,mesh,sorted_face, ptcls0, measurements, pos_err, nor_err, M, sigma0, sigma_desired, prune_percentage,dim = 6, visualize = False):
+  iterations = 0
+  best_hypothesis = ptcls0
+  best_score = 999.
+  num_measurements = len(measurements)
+  while iterations < k:
+    iterations
