@@ -498,4 +498,16 @@ def RansacParticle(n,k,threshold,d,mesh,sorted_face, ptcls0, measurements, pos_e
   best_score = 999.
   num_measurements = len(measurements)
   while iterations < k:
-    iterations
+    iterations += 1
+    maybeinliers_idx = random.sample(range(num_measurements),n)
+    maybeinliers = [measurements[i] for i in maybeinliers_idx] 
+    alsoinliers = []
+    hypothesis = RunImprovedScalingSeries(mesh,sorted_face, ptcls0, maybeinliers, pos_err, nor_err, M, sigma0, sigma_desired, prune_percentage,dim = 6, visualize = False)
+    for i in range(len(measurements)):
+      if i not in maybeinliers_idx:
+        if MeasurementFitHypothesis(hypothesis,measurements[i],pos_err,nor_err,mesh,sorted_face,threshold):
+          maybeinliers.append(measurements[i])
+          maybeinliers_idx.append(i)
+    # print maybeinliers_idx, 'len', len(maybeinliers_idx)
+    if len(maybeinliers) > d: # Maybe good hypothesis
+      # print 'Mayb
