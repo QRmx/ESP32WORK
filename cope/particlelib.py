@@ -510,4 +510,14 @@ def RansacParticle(n,k,threshold,d,mesh,sorted_face, ptcls0, measurements, pos_e
           maybeinliers_idx.append(i)
     # print maybeinliers_idx, 'len', len(maybeinliers_idx)
     if len(maybeinliers) > d: # Maybe good hypothesis
-      # print 'Mayb
+      # print 'Maybe good hypothesis'
+      updated_hypothesis = RunImprovedScalingSeries(mesh,sorted_face, ptcls0, maybeinliers, pos_err, nor_err, M, sigma0, sigma_desired, prune_percentage,dim = 6, visualize = False)
+      score = ScoreHypothesis(updated_hypothesis,maybeinliers,pos_err,nor_err,mesh,sorted_face)
+      # print score
+      if score < best_score:
+        best_hypothesis = updated_hypothesis
+        best_score = score
+        best_idx = maybeinliers_idx
+        if score < 1.8:
+            break
+  return best_hypothesis,best_score,best_idx
