@@ -27,4 +27,26 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
 # CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
-# POSSIB
+# POSSIBILITY OF SUCH DAMAGE.
+
+"""Homogeneous Transformation Matrices and Quaternions.
+
+A library for calculating 4x4 matrices for translating, rotating, reflecting,
+scaling, shearing, projecting, orthogonalizing, and superimposing arrays of
+3D homogeneous coordinates as well as for converting between rotation matrices,
+Euler angles, and quaternions. Also includes an Arcball control object and
+functions to decompose transformation matrices.
+
+:Author:
+  `Christoph Gohlke <http://www.lfd.uci.edu/~gohlke/>`_
+
+:Organization:
+  Laboratory for Fluorescence Dynamics, University of California, Irvine
+
+:Version: 2015.07.18
+
+Requirements
+------------
+* `CPython 2.7 or 3.4 <http://www.python.org>`_
+* `Numpy 1.9 <http://www.numpy.org>`_
+* 
