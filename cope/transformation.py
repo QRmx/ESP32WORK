@@ -67,4 +67,21 @@ numpy.dot(M, v) for shape (4, \*) column vectors, respectively
 numpy.dot(v, M.T) for shape (\*, 4) row vectors ("array of points").
 
 This module follows the "column vectors on the right" and "row major storage"
-(C contig
+(C contiguous) conventions. The translation components are in the right column
+of the transformation matrix, i.e. M[:3, 3].
+The transpose of the transformation matrices may have to be used to interface
+with other graphics systems, e.g. with OpenGL's glMultMatrixd(). See also [16].
+
+Calculations are carried out with numpy.float64 precision.
+
+Vector, point, quaternion, and matrix function arguments are expected to be
+"array like", i.e. tuple, list, or numpy arrays.
+
+Return types are numpy arrays unless specified otherwise.
+
+Angles are in radians unless specified otherwise.
+
+Quaternions w+ix+jy+kz are represented as [w, x, y, z].
+
+A triple of Euler angles can be applied/interpreted in 24 ways, which can
+be specified usi
