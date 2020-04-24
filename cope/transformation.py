@@ -114,4 +114,15 @@ References
      Ronald Goldman. In "Graphics Gems II", pp 320-323. Morgan Kaufmann, 1991.
 (3)  Decomposing a matrix into simple transformations. Spencer Thomas.
      In "Graphics Gems II", pp 320-323. Morgan Kaufmann, 1991.
-(4)  Recovering the data from the transformation matrix. Rona
+(4)  Recovering the data from the transformation matrix. Ronald Goldman.
+     In "Graphics Gems II", pp 324-331. Morgan Kaufmann, 1991.
+(5)  Euler angle conversion. Ken Shoemake.
+     In "Graphics Gems IV", pp 222-229. Morgan Kaufmann, 1994.
+(6)  Arcball rotation control. Ken Shoemake.
+     In "Graphics Gems IV", pp 175-192. Morgan Kaufmann, 1994.
+(7)  Representing attitude: Euler angles, unit quaternions, and rotation
+     vectors. James Diebel. 2006.
+(8)  A discussion of the solution for the best rotation to relate two sets
+     of vectors. W Kabsch. Acta Cryst. 1978. A34, 827-828.
+(9)  Closed-form solution of absolute orientation using unit quaternions.
+     BKP Horn. J Opt Soc Am A. 198
