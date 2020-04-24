@@ -125,4 +125,16 @@ References
 (8)  A discussion of the solution for the best rotation to relate two sets
      of vectors. W Kabsch. Acta Cryst. 1978. A34, 827-828.
 (9)  Closed-form solution of absolute orientation using unit quaternions.
-     BKP Horn. J Opt Soc Am A. 198
+     BKP Horn. J Opt Soc Am A. 1987. 4(4):629-642.
+(10) Quaternions. Ken Shoemake.
+     http://www.sfu.ca/~jwa3/cmpt461/files/quatut.pdf
+(11) From quaternion to matrix and back. JMP van Waveren. 2005.
+     http://www.intel.com/cd/ids/developer/asmo-na/eng/293748.htm
+(12) Uniform random rotations. Ken Shoemake.
+     In "Graphics Gems III", pp 124-132. Morgan Kaufmann, 1992.
+(13) Quaternion in molecular modeling. CFF Karney.
+     J Mol Graph Mod, 25(5):595-604
+(14) New method for extracting the quaternion from a rotation matrix.
+     Itzhack Y Bar-Itzhack, J Guid Contr Dynam. 2000. 23(6): 1085-1087.
+(15) Multiple View Geometry in Computer Vision. Hartley and Zissermann.
+     Cambridge University Press; 2nd Ed. 2004. Chapter 4
