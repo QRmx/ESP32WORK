@@ -99,4 +99,19 @@ be specified using a 4 character string or encoded 4-tuple:
   - repetition : first and last axis are same (1) or different (0).
   - frame : rotations are applied to static (0) or rotating (1) frame.
 
-Other Python packages and modules for 3D transformations and quaternio
+Other Python packages and modules for 3D transformations and quaternions:
+
+* `Transforms3d <https://pypi.python.org/pypi/transforms3d>`_
+   includes most code of this module.
+* `Blender.mathutils <http://www.blender.org/api/blender_python_api>`_
+* `numpy-dtypes <https://github.com/numpy/numpy-dtypes>`_
+
+References
+----------
+(1)  Matrices and transformations. Ronald Goldman.
+     In "Graphics Gems I", pp 472-475. Morgan Kaufmann, 1990.
+(2)  More matrices and transformations: shear and pseudo-perspective.
+     Ronald Goldman. In "Graphics Gems II", pp 320-323. Morgan Kaufmann, 1991.
+(3)  Decomposing a matrix into simple transformations. Spencer Thomas.
+     In "Graphics Gems II", pp 320-323. Morgan Kaufmann, 1991.
+(4)  Recovering the data from the transformation matrix. Rona
