@@ -137,4 +137,24 @@ References
 (14) New method for extracting the quaternion from a rotation matrix.
      Itzhack Y Bar-Itzhack, J Guid Contr Dynam. 2000. 23(6): 1085-1087.
 (15) Multiple View Geometry in Computer Vision. Hartley and Zissermann.
-     Cambridge University Press; 2nd Ed. 2004. Chapter 4
+     Cambridge University Press; 2nd Ed. 2004. Chapter 4, Algorithm 4.7, p 130.
+(16) Column Vectors vs. Row Vectors.
+     http://steve.hollasch.net/cgindex/math/matrix/column-vec.html
+
+Examples
+--------
+>>> alpha, beta, gamma = 0.123, -1.234, 2.345
+>>> origin, xaxis, yaxis, zaxis = [0, 0, 0], [1, 0, 0], [0, 1, 0], [0, 0, 1]
+>>> I = identity_matrix()
+>>> Rx = rotation_matrix(alpha, xaxis)
+>>> Ry = rotation_matrix(beta, yaxis)
+>>> Rz = rotation_matrix(gamma, zaxis)
+>>> R = concatenate_matrices(Rx, Ry, Rz)
+>>> euler = euler_from_matrix(R, 'rxyz')
+>>> numpy.allclose([alpha, beta, gamma], euler)
+True
+>>> Re = euler_matrix(alpha, beta, gamma, 'rxyz')
+>>> is_same_transform(R, Re)
+True
+>>> al, be, ga = euler_from_matrix(Re, 'rxyz')
+>>> is_same_transform(Re, euler_matrix(al, be, g
