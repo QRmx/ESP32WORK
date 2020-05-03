@@ -157,4 +157,26 @@ True
 >>> is_same_transform(R, Re)
 True
 >>> al, be, ga = euler_from_matrix(Re, 'rxyz')
->>> is_same_transform(Re, euler_matrix(al, be, g
+>>> is_same_transform(Re, euler_matrix(al, be, ga, 'rxyz'))
+True
+>>> qx = quaternion_about_axis(alpha, xaxis)
+>>> qy = quaternion_about_axis(beta, yaxis)
+>>> qz = quaternion_about_axis(gamma, zaxis)
+>>> q = quaternion_multiply(qx, qy)
+>>> q = quaternion_multiply(q, qz)
+>>> Rq = quaternion_matrix(q)
+>>> is_same_transform(R, Rq)
+True
+>>> S = scale_matrix(1.23, origin)
+>>> T = translation_matrix([1, 2, 3])
+>>> Z = shear_matrix(beta, xaxis, origin, zaxis)
+>>> R = random_rotation_matrix(numpy.random.rand(3))
+>>> M = concatenate_matrices(T, R, Z, S)
+>>> scale, shear, angles, trans, persp = decompose_matrix(M)
+>>> numpy.allclose(scale, 1.23)
+True
+>>> numpy.allclose(trans, [1, 2, 3])
+True
+>>> numpy.allclose(shear, [0, math.tan(beta), 0])
+True
+>>> is_same_transform(R, euler_matrix(axes='sx
