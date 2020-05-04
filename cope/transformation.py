@@ -179,4 +179,34 @@ True
 True
 >>> numpy.allclose(shear, [0, math.tan(beta), 0])
 True
->>> is_same_transform(R, euler_matrix(axes='sx
+>>> is_same_transform(R, euler_matrix(axes='sxyz', *angles))
+True
+>>> M1 = compose_matrix(scale, shear, angles, trans, persp)
+>>> is_same_transform(M, M1)
+True
+>>> v0, v1 = random_vector(3), random_vector(3)
+>>> M = rotation_matrix(angle_between_vectors(v0, v1), vector_product(v0, v1))
+>>> v2 = numpy.dot(v0, M[:3,:3].T)
+>>> numpy.allclose(unit_vector(v1), unit_vector(v2))
+True
+
+"""
+from __future__ import division, print_function
+
+import math
+
+import numpy
+
+__version__ = '2015.07.18'
+__docformat__ = 'restructuredtext en'
+__all__ = ()
+
+
+def identity_matrix():
+    """Return 4x4 identity/unit matrix.
+
+    >>> I = identity_matrix()
+    >>> numpy.allclose(I, numpy.dot(I, I))
+    True
+    >>> numpy.sum(I), numpy.trace(I)
+   
