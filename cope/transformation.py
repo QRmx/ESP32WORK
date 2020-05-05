@@ -269,4 +269,22 @@ def reflection_matrix(point, normal):
 
 
 def reflection_from_matrix(matrix):
-    """Return mirror plane point and no
+    """Return mirror plane point and normal vector from reflection matrix.
+
+    >>> v0 = numpy.random.random(3) - 0.5
+    >>> v1 = numpy.random.random(3) - 0.5
+    >>> M0 = reflection_matrix(v0, v1)
+    >>> point, normal = reflection_from_matrix(M0)
+    >>> M1 = reflection_matrix(point, normal)
+    >>> is_same_transform(M0, M1)
+    True
+
+    """
+    M = numpy.array(matrix, dtype=numpy.float64, copy=False)
+    # normal: unit eigenvector corresponding to eigenvalue -1
+    w, V = numpy.linalg.eig(M[:3, :3])
+    i = numpy.where(abs(numpy.real(w) + 1.0) < 1e-8)[0]
+    if not len(i):
+        raise ValueError("no unit eigenvector corresponding to eigenvalue -1")
+    normal = numpy.real(V[:, i[0]]).squeeze()
+    # point: any unit eigenvector corresponding to
