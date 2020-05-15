@@ -364,4 +364,22 @@ def rotation_from_matrix(matrix):
     direction = numpy.real(W[:, i[-1]]).squeeze()
     # point: unit eigenvector of R33 corresponding to eigenvalue of 1
     w, Q = numpy.linalg.eig(R)
-    i = numpy.where(abs(numpy.real(w) - 1.0) < 1e-8
+    i = numpy.where(abs(numpy.real(w) - 1.0) < 1e-8)[0]
+    if not len(i):
+        raise ValueError("no unit eigenvector corresponding to eigenvalue 1")
+    point = numpy.real(Q[:, i[-1]]).squeeze()
+    point /= point[3]
+    # rotation angle depending on direction
+    cosa = (numpy.trace(R33) - 1.0) / 2.0
+    if abs(direction[2]) > 1e-8:
+        sina = (R[1, 0] + (cosa-1.0)*direction[0]*direction[1]) / direction[2]
+    elif abs(direction[1]) > 1e-8:
+        sina = (R[0, 2] + (cosa-1.0)*direction[0]*direction[2]) / direction[1]
+    else:
+        sina = (R[2, 1] + (cosa-1.0)*direction[1]*direction[2]) / direction[0]
+    angle = math.atan2(sina, cosa)
+    return angle, direction, point
+
+
+def scale_matrix(factor, origin=None, direction=None):
+    """Return matrix to scale by
