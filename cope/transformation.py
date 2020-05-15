@@ -382,4 +382,28 @@ def rotation_from_matrix(matrix):
 
 
 def scale_matrix(factor, origin=None, direction=None):
-    """Return matrix to scale by
+    """Return matrix to scale by factor around origin in direction.
+
+    Use factor -1 for point symmetry.
+
+    >>> v = (numpy.random.rand(4, 5) - 0.5) * 20
+    >>> v[3] = 1
+    >>> S = scale_matrix(-1.234)
+    >>> numpy.allclose(numpy.dot(S, v)[:3], -1.234*v[:3])
+    True
+    >>> factor = random.random() * 10 - 5
+    >>> origin = numpy.random.random(3) - 0.5
+    >>> direct = numpy.random.random(3) - 0.5
+    >>> S = scale_matrix(factor, origin)
+    >>> S = scale_matrix(factor, origin, direct)
+
+    """
+    if direction is None:
+        # uniform scaling
+        M = numpy.diag([factor, factor, factor, 1.0])
+        if origin is not None:
+            M[:3, 3] = origin[:3]
+            M[:3, 3] *= 1.0 - factor
+    else:
+        # nonuniform scaling
+        direction = unit_vector(dire
