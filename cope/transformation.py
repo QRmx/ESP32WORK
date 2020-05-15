@@ -426,4 +426,24 @@ def scale_from_matrix(matrix):
     >>> S1 = scale_matrix(factor, origin, direction)
     >>> is_same_transform(S0, S1)
     True
-    >>> S0 = scale_matrix(fact
+    >>> S0 = scale_matrix(factor, origin, direct)
+    >>> factor, origin, direction = scale_from_matrix(S0)
+    >>> S1 = scale_matrix(factor, origin, direction)
+    >>> is_same_transform(S0, S1)
+    True
+
+    """
+    M = numpy.array(matrix, dtype=numpy.float64, copy=False)
+    M33 = M[:3, :3]
+    factor = numpy.trace(M33) - 2.0
+    try:
+        # direction: unit eigenvector corresponding to eigenvalue factor
+        w, V = numpy.linalg.eig(M33)
+        i = numpy.where(abs(numpy.real(w) - factor) < 1e-8)[0][0]
+        direction = numpy.real(V[:, i]).squeeze()
+        direction /= vector_norm(direction)
+    except IndexError:
+        # uniform scaling
+        factor = (factor + 2.0) / 3.0
+        direction = None
+    # origin: any eigenvector corresponding to eigenval
