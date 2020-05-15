@@ -406,4 +406,24 @@ def scale_matrix(factor, origin=None, direction=None):
             M[:3, 3] *= 1.0 - factor
     else:
         # nonuniform scaling
-        direction = unit_vector(dire
+        direction = unit_vector(direction[:3])
+        factor = 1.0 - factor
+        M = numpy.identity(4)
+        M[:3, :3] -= factor * numpy.outer(direction, direction)
+        if origin is not None:
+            M[:3, 3] = (factor * numpy.dot(origin[:3], direction)) * direction
+    return M
+
+
+def scale_from_matrix(matrix):
+    """Return scaling factor, origin and direction from scaling matrix.
+
+    >>> factor = random.random() * 10 - 5
+    >>> origin = numpy.random.random(3) - 0.5
+    >>> direct = numpy.random.random(3) - 0.5
+    >>> S0 = scale_matrix(factor, origin)
+    >>> factor, origin, direction = scale_from_matrix(S0)
+    >>> S1 = scale_matrix(factor, origin, direction)
+    >>> is_same_transform(S0, S1)
+    True
+    >>> S0 = scale_matrix(fact
