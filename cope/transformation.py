@@ -446,4 +446,21 @@ def scale_from_matrix(matrix):
         # uniform scaling
         factor = (factor + 2.0) / 3.0
         direction = None
-    # origin: any eigenvector corresponding to eigenval
+    # origin: any eigenvector corresponding to eigenvalue 1
+    w, V = numpy.linalg.eig(M)
+    i = numpy.where(abs(numpy.real(w) - 1.0) < 1e-8)[0]
+    if not len(i):
+        raise ValueError("no eigenvector corresponding to eigenvalue 1")
+    origin = numpy.real(V[:, i[-1]]).squeeze()
+    origin /= origin[3]
+    return factor, origin, direction
+
+
+def projection_matrix(point, normal, direction=None,
+                      perspective=None, pseudo=False):
+    """Return matrix to project onto plane defined by point and normal.
+
+    Using either perspective point, projection direction, or none of both.
+
+    If pseudo is True, perspective projections will preserve relative depth
+    such that Perspective = dot(Orthogonal, PseudoPerspe
