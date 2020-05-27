@@ -518,4 +518,22 @@ def projection_matrix(point, normal, direction=None,
     return M
 
 
-def projection_from_matrix(matrix, pseudo=False
+def projection_from_matrix(matrix, pseudo=False):
+    """Return projection plane and perspective point from projection matrix.
+
+    Return values are same as arguments for projection_matrix function:
+    point, normal, direction, perspective, and pseudo.
+
+    >>> point = numpy.random.random(3) - 0.5
+    >>> normal = numpy.random.random(3) - 0.5
+    >>> direct = numpy.random.random(3) - 0.5
+    >>> persp = numpy.random.random(3) - 0.5
+    >>> P0 = projection_matrix(point, normal)
+    >>> result = projection_from_matrix(P0)
+    >>> P1 = projection_matrix(*result)
+    >>> is_same_transform(P0, P1)
+    True
+    >>> P0 = projection_matrix(point, normal, direct)
+    >>> result = projection_from_matrix(P0)
+    >>> P1 = projection_matrix(*result)
+    >>> is_same_trans
