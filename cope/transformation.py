@@ -500,4 +500,22 @@ def projection_matrix(point, normal, direction=None,
         if pseudo:
             # preserve relative depth
             M[:3, :3] -= numpy.outer(normal, normal)
-    
+            M[:3, 3] = numpy.dot(point, normal) * (perspective+normal)
+        else:
+            M[:3, 3] = numpy.dot(point, normal) * perspective
+        M[3, :3] = -normal
+        M[3, 3] = numpy.dot(perspective, normal)
+    elif direction is not None:
+        # parallel projection
+        direction = numpy.array(direction[:3], dtype=numpy.float64, copy=False)
+        scale = numpy.dot(direction, normal)
+        M[:3, :3] -= numpy.outer(direction, normal) / scale
+        M[:3, 3] = direction * (numpy.dot(point, normal) / scale)
+    else:
+        # orthogonal projection
+        M[:3, :3] -= numpy.outer(normal, normal)
+        M[:3, 3] = numpy.dot(point, normal) * normal
+    return M
+
+
+def projection_from_matrix(matrix, pseudo=False
