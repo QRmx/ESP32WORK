@@ -536,4 +536,23 @@ def projection_from_matrix(matrix, pseudo=False):
     >>> P0 = projection_matrix(point, normal, direct)
     >>> result = projection_from_matrix(P0)
     >>> P1 = projection_matrix(*result)
-    >>> is_same_trans
+    >>> is_same_transform(P0, P1)
+    True
+    >>> P0 = projection_matrix(point, normal, perspective=persp, pseudo=False)
+    >>> result = projection_from_matrix(P0, pseudo=False)
+    >>> P1 = projection_matrix(*result)
+    >>> is_same_transform(P0, P1)
+    True
+    >>> P0 = projection_matrix(point, normal, perspective=persp, pseudo=True)
+    >>> result = projection_from_matrix(P0, pseudo=True)
+    >>> P1 = projection_matrix(*result)
+    >>> is_same_transform(P0, P1)
+    True
+
+    """
+    M = numpy.array(matrix, dtype=numpy.float64, copy=False)
+    M33 = M[:3, :3]
+    w, V = numpy.linalg.eig(M)
+    i = numpy.where(abs(numpy.real(w) - 1.0) < 1e-8)[0]
+    if not pseudo and len(i):
+        # point: any eigenvector corresponding to eigenvalue 1
