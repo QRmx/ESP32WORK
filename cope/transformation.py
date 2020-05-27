@@ -479,4 +479,25 @@ def projection_matrix(point, normal, direction=None,
     >>> is_same_transform(P2, numpy.dot(P0, P3))
     True
     >>> P = projection_matrix([3, 0, 0], [1, 1, 0], [1, 0, 0])
-    >>> v0 = (numpy.random.ran
+    >>> v0 = (numpy.random.rand(4, 5) - 0.5) * 20
+    >>> v0[3] = 1
+    >>> v1 = numpy.dot(P, v0)
+    >>> numpy.allclose(v1[1], v0[1])
+    True
+    >>> numpy.allclose(v1[0], 3-v1[1])
+    True
+
+    """
+    M = numpy.identity(4)
+    point = numpy.array(point[:3], dtype=numpy.float64, copy=False)
+    normal = unit_vector(normal[:3])
+    if perspective is not None:
+        # perspective projection
+        perspective = numpy.array(perspective[:3], dtype=numpy.float64,
+                                  copy=False)
+        M[0, 0] = M[1, 1] = M[2, 2] = numpy.dot(perspective-point, normal)
+        M[:3, :3] -= numpy.outer(perspective, normal)
+        if pseudo:
+            # preserve relative depth
+            M[:3, :3] -= numpy.outer(normal, normal)
+    
