@@ -556,3 +556,19 @@ def projection_from_matrix(matrix, pseudo=False):
     i = numpy.where(abs(numpy.real(w) - 1.0) < 1e-8)[0]
     if not pseudo and len(i):
         # point: any eigenvector corresponding to eigenvalue 1
+        point = numpy.real(V[:, i[-1]]).squeeze()
+        point /= point[3]
+        # direction: unit eigenvector corresponding to eigenvalue 0
+        w, V = numpy.linalg.eig(M33)
+        i = numpy.where(abs(numpy.real(w)) < 1e-8)[0]
+        if not len(i):
+            raise ValueError("no eigenvector corresponding to eigenvalue 0")
+        direction = numpy.real(V[:, i[0]]).squeeze()
+        direction /= vector_norm(direction)
+        # normal: unit eigenvector of M33.T corresponding to eigenvalue 0
+        w, V = numpy.linalg.eig(M33.T)
+        i = numpy.where(abs(numpy.real(w)) < 1e-8)[0]
+        if len(i):
+            # parallel projection
+            normal = numpy.real(V[:, i[0]]).squeeze()
+    
