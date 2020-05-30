@@ -588,3 +588,21 @@ def projection_from_matrix(matrix, pseudo=False):
         perspective = M[:3, 3] / numpy.dot(point[:3], normal)
         if pseudo:
             perspective -= normal
+        return point, normal, None, perspective, pseudo
+
+
+def clip_matrix(left, right, bottom, top, near, far, perspective=False):
+    """Return matrix to obtain normalized device coordinates from frustum.
+
+    The frustum bounds are axis-aligned along x (left, right),
+    y (bottom, top) and z (near, far).
+
+    Normalized device coordinates are in range [-1, 1] if coordinates are
+    inside the frustum.
+
+    If perspective is True the frustum is a truncated pyramid with the
+    perspective point at origin and direction along z axis, otherwise an
+    orthographic canonical view volume (a box).
+
+    Homogeneous coordinates transformed by the perspective clip matrix
+    need to be dehomogenized (divided by w coordi
