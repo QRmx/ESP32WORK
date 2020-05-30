@@ -571,4 +571,20 @@ def projection_from_matrix(matrix, pseudo=False):
         if len(i):
             # parallel projection
             normal = numpy.real(V[:, i[0]]).squeeze()
-    
+            normal /= vector_norm(normal)
+            return point, normal, direction, None, False
+        else:
+            # orthogonal projection, where normal equals direction vector
+            return point, direction, None, None, False
+    else:
+        # perspective projection
+        i = numpy.where(abs(numpy.real(w)) > 1e-8)[0]
+        if not len(i):
+            raise ValueError(
+                "no eigenvector not corresponding to eigenvalue 0")
+        point = numpy.real(V[:, i[-1]]).squeeze()
+        point /= point[3]
+        normal = - M[3, :3]
+        perspective = M[:3, 3] / numpy.dot(point[:3], normal)
+        if pseudo:
+            perspective -= normal
