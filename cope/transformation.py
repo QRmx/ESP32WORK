@@ -625,4 +625,19 @@ def clip_matrix(left, right, bottom, top, near, far, perspective=False):
     array([ 1.,  1., -1.,  1.])
 
     """
-    if left >= right or bottom >= top or
+    if left >= right or bottom >= top or near >= far:
+        raise ValueError("invalid frustum")
+    if perspective:
+        if near <= _EPS:
+            raise ValueError("invalid frustum: near <= 0")
+        t = 2.0 * near
+        M = [[t/(left-right), 0.0, (right+left)/(right-left), 0.0],
+             [0.0, t/(bottom-top), (top+bottom)/(top-bottom), 0.0],
+             [0.0, 0.0, (far+near)/(near-far), t*far/(far-near)],
+             [0.0, 0.0, -1.0, 0.0]]
+    else:
+        M = [[2.0/(right-left), 0.0, 0.0, (right+left)/(left-right)],
+             [0.0, 2.0/(top-bottom), 0.0, (top+bottom)/(bottom-top)],
+             [0.0, 0.0, 2.0/(far-near), (far+near)/(near-far)],
+             [0.0, 0.0, 0.0, 1.0]]
+    return numpy.
