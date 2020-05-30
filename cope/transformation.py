@@ -605,4 +605,24 @@ def clip_matrix(left, right, bottom, top, near, far, perspective=False):
     orthographic canonical view volume (a box).
 
     Homogeneous coordinates transformed by the perspective clip matrix
-    need to be dehomogenized (divided by w coordi
+    need to be dehomogenized (divided by w coordinate).
+
+    >>> frustum = numpy.random.rand(6)
+    >>> frustum[1] += frustum[0]
+    >>> frustum[3] += frustum[2]
+    >>> frustum[5] += frustum[4]
+    >>> M = clip_matrix(perspective=False, *frustum)
+    >>> numpy.dot(M, [frustum[0], frustum[2], frustum[4], 1])
+    array([-1., -1., -1.,  1.])
+    >>> numpy.dot(M, [frustum[1], frustum[3], frustum[5], 1])
+    array([ 1.,  1.,  1.,  1.])
+    >>> M = clip_matrix(perspective=True, *frustum)
+    >>> v = numpy.dot(M, [frustum[0], frustum[2], frustum[4], 1])
+    >>> v / v[3]
+    array([-1., -1., -1.,  1.])
+    >>> v = numpy.dot(M, [frustum[1], frustum[3], frustum[4], 1])
+    >>> v / v[3]
+    array([ 1.,  1., -1.,  1.])
+
+    """
+    if left >= right or bottom >= top or
