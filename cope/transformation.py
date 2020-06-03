@@ -697,4 +697,26 @@ def shear_from_matrix(matrix):
         raise ValueError("no two linear independent eigenvectors found %s" % w)
     V = numpy.real(V[:, i]).squeeze().T
     lenorm = -1.0
-    for i
+    for i0, i1 in ((0, 1), (0, 2), (1, 2)):
+        n = numpy.cross(V[i0], V[i1])
+        w = vector_norm(n)
+        if w > lenorm:
+            lenorm = w
+            normal = n
+    normal /= lenorm
+    # direction and angle
+    direction = numpy.dot(M33 - numpy.identity(3), normal)
+    angle = vector_norm(direction)
+    direction /= angle
+    angle = math.atan(angle)
+    # point: eigenvector corresponding to eigenvalue 1
+    w, V = numpy.linalg.eig(M)
+    i = numpy.where(abs(numpy.real(w) - 1.0) < 1e-8)[0]
+    if not len(i):
+        raise ValueError("no eigenvector corresponding to eigenvalue 1")
+    point = numpy.real(V[:, i[-1]]).squeeze()
+    point /= point[3]
+    return angle, direction, point, normal
+
+
+def
