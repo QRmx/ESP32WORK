@@ -764,4 +764,28 @@ def decompose_matrix(matrix):
     angles = [0.0, 0.0, 0.0]
 
     if any(abs(M[:3, 3]) > _EPS):
-        pe
+        perspective = numpy.dot(M[:, 3], numpy.linalg.inv(P.T))
+        M[:, 3] = 0.0, 0.0, 0.0, 1.0
+    else:
+        perspective = numpy.array([0.0, 0.0, 0.0, 1.0])
+
+    translate = M[3, :3].copy()
+    M[3, :3] = 0.0
+
+    row = M[:3, :3].copy()
+    scale[0] = vector_norm(row[0])
+    row[0] /= scale[0]
+    shear[0] = numpy.dot(row[0], row[1])
+    row[1] -= row[0] * shear[0]
+    scale[1] = vector_norm(row[1])
+    row[1] /= scale[1]
+    shear[0] /= scale[1]
+    shear[1] = numpy.dot(row[0], row[2])
+    row[2] -= row[0] * shear[1]
+    shear[2] = numpy.dot(row[1], row[2])
+    row[2] -= row[1] * shear[2]
+    scale[2] = vector_norm(row[2])
+    row[2] /= scale[2]
+    shear[1:] /= scale[2]
+
+    if 
