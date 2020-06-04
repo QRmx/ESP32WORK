@@ -737,4 +737,31 @@ def decompose_matrix(matrix):
     >>> T0 = translation_matrix([1, 2, 3])
     >>> scale, shear, angles, trans, persp = decompose_matrix(T0)
     >>> T1 = translation_matrix(trans)
-    >>> nump
+    >>> numpy.allclose(T0, T1)
+    True
+    >>> S = scale_matrix(0.123)
+    >>> scale, shear, angles, trans, persp = decompose_matrix(S)
+    >>> scale[0]
+    0.123
+    >>> R0 = euler_matrix(1, 2, 3)
+    >>> scale, shear, angles, trans, persp = decompose_matrix(R0)
+    >>> R1 = euler_matrix(*angles)
+    >>> numpy.allclose(R0, R1)
+    True
+
+    """
+    M = numpy.array(matrix, dtype=numpy.float64, copy=True).T
+    if abs(M[3, 3]) < _EPS:
+        raise ValueError("M[3, 3] is zero")
+    M /= M[3, 3]
+    P = M.copy()
+    P[:, 3] = 0.0, 0.0, 0.0, 1.0
+    if not numpy.linalg.det(P):
+        raise ValueError("matrix is singular")
+
+    scale = numpy.zeros((3, ))
+    shear = [0.0, 0.0, 0.0]
+    angles = [0.0, 0.0, 0.0]
+
+    if any(abs(M[:3, 3]) > _EPS):
+        pe
