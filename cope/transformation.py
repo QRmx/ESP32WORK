@@ -719,4 +719,22 @@ def shear_from_matrix(matrix):
     return angle, direction, point, normal
 
 
-def
+def decompose_matrix(matrix):
+    """Return sequence of transformations from transformation matrix.
+
+    matrix : array_like
+        Non-degenerative homogeneous transformation matrix
+
+    Return tuple of:
+        scale : vector of 3 scaling factors
+        shear : list of shear factors for x-y, x-z, y-z axes
+        angles : list of Euler angles about static x, y, z axes
+        translate : translation vector along x, y, z axes
+        perspective : perspective partition of matrix
+
+    Raise ValueError if matrix is of wrong type or degenerative.
+
+    >>> T0 = translation_matrix([1, 2, 3])
+    >>> scale, shear, angles, trans, persp = decompose_matrix(T0)
+    >>> T1 = translation_matrix(trans)
+    >>> nump
