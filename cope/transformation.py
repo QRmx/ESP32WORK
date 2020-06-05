@@ -788,4 +788,26 @@ def decompose_matrix(matrix):
     row[2] /= scale[2]
     shear[1:] /= scale[2]
 
-    if 
+    if numpy.dot(row[0], numpy.cross(row[1], row[2])) < 0:
+        numpy.negative(scale, scale)
+        numpy.negative(row, row)
+
+    angles[1] = math.asin(-row[0, 2])
+    if math.cos(angles[1]):
+        angles[0] = math.atan2(row[1, 2], row[2, 2])
+        angles[2] = math.atan2(row[0, 1], row[0, 0])
+    else:
+        #angles[0] = math.atan2(row[1, 0], row[1, 1])
+        angles[0] = math.atan2(-row[2, 1], row[1, 1])
+        angles[2] = 0.0
+
+    return scale, shear, angles, translate, perspective
+
+
+def compose_matrix(scale=None, shear=None, angles=None, translate=None,
+                   perspective=None):
+    """Return transformation matrix from sequence of transformations.
+
+    This is the inverse of the decompose_matrix function.
+
+    Sequence o
