@@ -810,4 +810,19 @@ def compose_matrix(scale=None, shear=None, angles=None, translate=None,
 
     This is the inverse of the decompose_matrix function.
 
-    Sequence o
+    Sequence of transformations:
+        scale : vector of 3 scaling factors
+        shear : list of shear factors for x-y, x-z, y-z axes
+        angles : list of Euler angles about static x, y, z axes
+        translate : translation vector along x, y, z axes
+        perspective : perspective partition of matrix
+
+    >>> scale = numpy.random.random(3) - 0.5
+    >>> shear = numpy.random.random(3) - 0.5
+    >>> angles = (numpy.random.random(3) - 0.5) * (2*math.pi)
+    >>> trans = numpy.random.random(3) - 0.5
+    >>> persp = numpy.random.random(4) - 0.5
+    >>> M0 = compose_matrix(scale, shear, angles, trans, persp)
+    >>> result = decompose_matrix(M0)
+    >>> M1 = compose_matrix(*result)
+    >>> is_same_transform(M0, M1
