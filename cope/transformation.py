@@ -825,4 +825,32 @@ def compose_matrix(scale=None, shear=None, angles=None, translate=None,
     >>> M0 = compose_matrix(scale, shear, angles, trans, persp)
     >>> result = decompose_matrix(M0)
     >>> M1 = compose_matrix(*result)
-    >>> is_same_transform(M0, M1
+    >>> is_same_transform(M0, M1)
+    True
+
+    """
+    M = numpy.identity(4)
+    if perspective is not None:
+        P = numpy.identity(4)
+        P[3, :] = perspective[:4]
+        M = numpy.dot(M, P)
+    if translate is not None:
+        T = numpy.identity(4)
+        T[:3, 3] = translate[:3]
+        M = numpy.dot(M, T)
+    if angles is not None:
+        R = euler_matrix(angles[0], angles[1], angles[2], 'sxyz')
+        M = numpy.dot(M, R)
+    if shear is not None:
+        Z = numpy.identity(4)
+        Z[1, 2] = shear[2]
+        Z[0, 2] = shear[1]
+        Z[0, 1] = shear[0]
+        M = numpy.dot(M, Z)
+    if scale is not None:
+        S = numpy.identity(4)
+        S[0, 0] = scale[0]
+        S[1, 1] = scale[1]
+        S[2, 2] = scale[2]
+        M = numpy.dot(M, S)
+    M /= M[3, 
