@@ -878,4 +878,21 @@ def orthogonalization_matrix(lengths, angles):
     cosa, cosb, cosg = numpy.cos(angles)
     co = (cosa * cosb - cosg) / (sina * sinb)
     return numpy.array([
-   
+        [ a*sinb*math.sqrt(1.0-co*co),  0.0,    0.0, 0.0],
+        [-a*sinb*co,                    b*sina, 0.0, 0.0],
+        [ a*cosb,                       b*cosa, c,   0.0],
+        [ 0.0,                          0.0,    0.0, 1.0]])
+
+
+def affine_matrix_from_points(v0, v1, shear=True, scale=True, usesvd=True):
+    """Return affine transform matrix to register two point sets.
+
+    v0 and v1 are shape (ndims, \*) arrays of at least ndims non-homogeneous
+    coordinates, where ndims is the dimensionality of the coordinate space.
+
+    If shear is False, a similarity transformation matrix is returned.
+    If also scale is False, a rigid/Euclidean transformation matrix
+    is returned.
+
+    By default the algorithm by Hartley and Zissermann [15] is used.
+    If us
