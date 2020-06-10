@@ -910,4 +910,23 @@ def affine_matrix_from_points(v0, v1, shear=True, scale=True, usesvd=True):
     array([[   0.14549,    0.00062,  675.50008],
            [   0.00048,    0.14094,   53.24971],
            [   0.     ,    0.     ,    1.     ]])
-    >>> T = transla
+    >>> T = translation_matrix(numpy.random.random(3)-0.5)
+    >>> R = random_rotation_matrix(numpy.random.random(3))
+    >>> S = scale_matrix(random.random())
+    >>> M = concatenate_matrices(T, R, S)
+    >>> v0 = (numpy.random.rand(4, 100) - 0.5) * 20
+    >>> v0[3] = 1
+    >>> v1 = numpy.dot(M, v0)
+    >>> v0[:3] += numpy.random.normal(0, 1e-8, 300).reshape(3, -1)
+    >>> M = affine_matrix_from_points(v0[:3], v1[:3])
+    >>> numpy.allclose(v1, numpy.dot(M, v0))
+    True
+
+    More examples in superimposition_matrix()
+
+    """
+    v0 = numpy.array(v0, dtype=numpy.float64, copy=True)
+    v1 = numpy.array(v1, dtype=numpy.float64, copy=True)
+
+    ndims = v0.shape[0]
+    if ndims < 2 or v0.shape[1] < ndims or v0.shape != v1.shape:
