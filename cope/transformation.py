@@ -895,4 +895,19 @@ def affine_matrix_from_points(v0, v1, shear=True, scale=True, usesvd=True):
     is returned.
 
     By default the algorithm by Hartley and Zissermann [15] is used.
-    If us
+    If usesvd is True, similarity and Euclidean transformation matrices
+    are calculated by minimizing the weighted sum of squared deviations
+    (RMSD) according to the algorithm by Kabsch [8].
+    Otherwise, and if ndims is 3, the quaternion based algorithm by Horn [9]
+    is used, which is slower when using this Python implementation.
+
+    The returned matrix performs rotation, translation and uniform scaling
+    (if specified).
+
+    >>> v0 = [[0, 1031, 1031, 0], [0, 0, 1600, 1600]]
+    >>> v1 = [[675, 826, 826, 677], [55, 52, 281, 277]]
+    >>> affine_matrix_from_points(v0, v1)
+    array([[   0.14549,    0.00062,  675.50008],
+           [   0.00048,    0.14094,   53.24971],
+           [   0.     ,    0.     ,    1.     ]])
+    >>> T = transla
