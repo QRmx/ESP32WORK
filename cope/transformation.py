@@ -985,4 +985,25 @@ def affine_matrix_from_points(v0, v1, shear=True, scale=True, usesvd=True):
         # Affine transformation; scale is ratio of RMS deviations from centroid
         v0 *= v0
         v1 *= v1
-        M[:ndims, :ndims] *= math.sqrt(numpy.
+        M[:ndims, :ndims] *= math.sqrt(numpy.sum(v1) / numpy.sum(v0))
+
+    # move centroids back
+    M = numpy.dot(numpy.linalg.inv(M1), numpy.dot(M, M0))
+    M /= M[ndims, ndims]
+    return M
+
+
+def superimposition_matrix(v0, v1, scale=False, usesvd=True):
+    """Return matrix to transform given 3D point set into second point set.
+
+    v0 and v1 are shape (3, \*) or (4, \*) arrays of at least 3 points.
+
+    The parameters scale and usesvd are explained in the more general
+    affine_matrix_from_points function.
+
+    The returned matrix is a similarity or Euclidean transformation matrix.
+    This function has a fast C implementation in transformations.c.
+
+    >>> v0 = numpy.random.rand(3, 10)
+    >>> M = superimposition_matrix(v0, v0)
+    >>> num
