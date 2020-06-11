@@ -969,4 +969,20 @@ def affine_matrix_from_points(v0, v1, shear=True, scale=True, usesvd=True):
         # compute symmetric matrix N
         xx, yy, zz = numpy.sum(v0 * v1, axis=1)
         xy, yz, zx = numpy.sum(v0 * numpy.roll(v1, -1, axis=0), axis=1)
-       
+        xz, yx, zy = numpy.sum(v0 * numpy.roll(v1, -2, axis=0), axis=1)
+        N = [[xx+yy+zz, 0.0,      0.0,      0.0],
+             [yz-zy,    xx-yy-zz, 0.0,      0.0],
+             [zx-xz,    xy+yx,    yy-xx-zz, 0.0],
+             [xy-yx,    zx+xz,    yz+zy,    zz-xx-yy]]
+        # quaternion: eigenvector corresponding to most positive eigenvalue
+        w, V = numpy.linalg.eigh(N)
+        q = V[:, numpy.argmax(w)]
+        q /= vector_norm(q)  # unit quaternion
+        # homogeneous transformation matrix
+        M = quaternion_matrix(q)
+
+    if scale and not shear:
+        # Affine transformation; scale is ratio of RMS deviations from centroid
+        v0 *= v0
+        v1 *= v1
+        M[:ndims, :ndims] *= math.sqrt(numpy.
