@@ -952,4 +952,21 @@ def affine_matrix_from_points(v0, v1, shear=True, scale=True, usesvd=True):
         t = numpy.dot(C, numpy.linalg.pinv(B))
         t = numpy.concatenate((t, numpy.zeros((ndims, 1))), axis=1)
         M = numpy.vstack((t, ((0.0,)*ndims) + (1.0,)))
-    elif usesvd or nd
+    elif usesvd or ndims != 3:
+        # Rigid transformation via SVD of covariance matrix
+        u, s, vh = numpy.linalg.svd(numpy.dot(v1, v0.T))
+        # rotation matrix from SVD orthonormal bases
+        R = numpy.dot(u, vh)
+        if numpy.linalg.det(R) < 0.0:
+            # R does not constitute right handed system
+            R -= numpy.outer(u[:, ndims-1], vh[ndims-1, :]*2.0)
+            s[-1] *= -1.0
+        # homogeneous transformation matrix
+        M = numpy.identity(ndims+1)
+        M[:ndims, :ndims] = R
+    else:
+        # Rigid transformation matrix via quaternion
+        # compute symmetric matrix N
+        xx, yy, zz = numpy.sum(v0 * v1, axis=1)
+        xy, yz, zx = numpy.sum(v0 * numpy.roll(v1, -1, axis=0), axis=1)
+       
