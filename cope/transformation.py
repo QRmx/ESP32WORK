@@ -1006,4 +1006,22 @@ def superimposition_matrix(v0, v1, scale=False, usesvd=True):
 
     >>> v0 = numpy.random.rand(3, 10)
     >>> M = superimposition_matrix(v0, v0)
-    >>> num
+    >>> numpy.allclose(M, numpy.identity(4))
+    True
+    >>> R = random_rotation_matrix(numpy.random.random(3))
+    >>> v0 = [[1,0,0], [0,1,0], [0,0,1], [1,1,1]]
+    >>> v1 = numpy.dot(R, v0)
+    >>> M = superimposition_matrix(v0, v1)
+    >>> numpy.allclose(v1, numpy.dot(M, v0))
+    True
+    >>> v0 = (numpy.random.rand(4, 100) - 0.5) * 20
+    >>> v0[3] = 1
+    >>> v1 = numpy.dot(R, v0)
+    >>> M = superimposition_matrix(v0, v1)
+    >>> numpy.allclose(v1, numpy.dot(M, v0))
+    True
+    >>> S = scale_matrix(random.random())
+    >>> T = translation_matrix(numpy.random.random(3)-0.5)
+    >>> M = concatenate_matrices(T, R, S)
+    >>> v1 = numpy.dot(M, v0)
+    >>> v0[:3] += numpy.random.normal(0, 1e-9, 300).reshape(3, 
