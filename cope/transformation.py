@@ -1024,4 +1024,25 @@ def superimposition_matrix(v0, v1, scale=False, usesvd=True):
     >>> T = translation_matrix(numpy.random.random(3)-0.5)
     >>> M = concatenate_matrices(T, R, S)
     >>> v1 = numpy.dot(M, v0)
-    >>> v0[:3] += numpy.random.normal(0, 1e-9, 300).reshape(3, 
+    >>> v0[:3] += numpy.random.normal(0, 1e-9, 300).reshape(3, -1)
+    >>> M = superimposition_matrix(v0, v1, scale=True)
+    >>> numpy.allclose(v1, numpy.dot(M, v0))
+    True
+    >>> M = superimposition_matrix(v0, v1, scale=True, usesvd=False)
+    >>> numpy.allclose(v1, numpy.dot(M, v0))
+    True
+    >>> v = numpy.empty((4, 100, 3))
+    >>> v[:, :, 0] = v0
+    >>> M = superimposition_matrix(v0, v1, scale=True, usesvd=False)
+    >>> numpy.allclose(v1, numpy.dot(M, v[:, :, 0]))
+    True
+
+    """
+    v0 = numpy.array(v0, dtype=numpy.float64, copy=False)[:3]
+    v1 = numpy.array(v1, dtype=numpy.float64, copy=False)[:3]
+    return affine_matrix_from_points(v0, v1, shear=False,
+                                     scale=scale, usesvd=usesvd)
+
+
+def euler_matrix(ai, aj, ak, axes='sxyz'):
+    """Return homogeneous rotation matrix fro
