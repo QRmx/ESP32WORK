@@ -1045,4 +1045,24 @@ def superimposition_matrix(v0, v1, scale=False, usesvd=True):
 
 
 def euler_matrix(ai, aj, ak, axes='sxyz'):
-    """Return homogeneous rotation matrix fro
+    """Return homogeneous rotation matrix from Euler angles and axis sequence.
+
+    ai, aj, ak : Euler's roll, pitch and yaw angles
+    axes : One of 24 axis sequences as string or encoded tuple
+
+    >>> R = euler_matrix(1, 2, 3, 'syxz')
+    >>> numpy.allclose(numpy.sum(R[0]), -1.34786452)
+    True
+    >>> R = euler_matrix(1, 2, 3, (0, 1, 0, 1))
+    >>> numpy.allclose(numpy.sum(R[0]), -0.383436184)
+    True
+    >>> ai, aj, ak = (4*math.pi) * (numpy.random.random(3) - 0.5)
+    >>> for axes in _AXES2TUPLE.keys():
+    ...    R = euler_matrix(ai, aj, ak, axes)
+    >>> for axes in _TUPLE2AXES.keys():
+    ...    R = euler_matrix(ai, aj, ak, axes)
+
+    """
+    try:
+        firstaxis, parity, repetition, frame = _AXES2TUPLE[axes]
+ 
