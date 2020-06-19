@@ -1095,3 +1095,28 @@ def euler_matrix(ai, aj, ak, axes='sxyz'):
         M[k, j] = cj*sc+cs
         M[k, k] = cj*cc-ss
     else:
+        M[i, i] = cj*ck
+        M[i, j] = sj*sc-cs
+        M[i, k] = sj*cc+ss
+        M[j, i] = cj*sk
+        M[j, j] = sj*ss+cc
+        M[j, k] = sj*cs-sc
+        M[k, i] = -sj
+        M[k, j] = cj*si
+        M[k, k] = cj*ci
+    return M
+
+
+def euler_from_matrix(matrix, axes='sxyz'):
+    """Return Euler angles from rotation matrix for specified axis sequence.
+
+    axes : One of 24 axis sequences as string or encoded tuple
+
+    Note that many Euler angle triplets can describe one matrix.
+
+    >>> R0 = euler_matrix(1, 2, 3, 'syxz')
+    >>> al, be, ga = euler_from_matrix(R0, 'syxz')
+    >>> R1 = euler_matrix(al, be, ga, 'syxz')
+    >>> numpy.allclose(R0, R1)
+    True
+    >>> angles = (4*math.pi) * (numpy.random.random(3)
