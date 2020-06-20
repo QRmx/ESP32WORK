@@ -1119,4 +1119,25 @@ def euler_from_matrix(matrix, axes='sxyz'):
     >>> R1 = euler_matrix(al, be, ga, 'syxz')
     >>> numpy.allclose(R0, R1)
     True
-    >>> angles = (4*math.pi) * (numpy.random.random(3)
+    >>> angles = (4*math.pi) * (numpy.random.random(3) - 0.5)
+    >>> for axes in _AXES2TUPLE.keys():
+    ...    R0 = euler_matrix(axes=axes, *angles)
+    ...    R1 = euler_matrix(axes=axes, *euler_from_matrix(R0, axes))
+    ...    if not numpy.allclose(R0, R1): print(axes, "failed")
+
+    """
+    try:
+        firstaxis, parity, repetition, frame = _AXES2TUPLE[axes.lower()]
+    except (AttributeError, KeyError):
+        _TUPLE2AXES[axes]  # validation
+        firstaxis, parity, repetition, frame = axes
+
+    i = firstaxis
+    j = _NEXT_AXIS[i+parity]
+    k = _NEXT_AXIS[i-parity+1]
+
+    M = numpy.array(matrix, dtype=numpy.float64, copy=False)[:3, :3]
+    if repetition:
+        sy = math.sqrt(M[i, j]*M[i, j] + M[i, k]*M[i, k])
+        if sy > _EPS:
+            ax = math.atan2( M[i, j
