@@ -1188,4 +1188,37 @@ def quaternion_from_euler(ai, aj, ak, axes='sxyz'):
 
     """
     try:
-        firstaxis, parity, repetition, frame = _AXES2
+        firstaxis, parity, repetition, frame = _AXES2TUPLE[axes.lower()]
+    except (AttributeError, KeyError):
+        _TUPLE2AXES[axes]  # validation
+        firstaxis, parity, repetition, frame = axes
+
+    i = firstaxis + 1
+    j = _NEXT_AXIS[i+parity-1] + 1
+    k = _NEXT_AXIS[i-parity] + 1
+
+    if frame:
+        ai, ak = ak, ai
+    if parity:
+        aj = -aj
+
+    ai /= 2.0
+    aj /= 2.0
+    ak /= 2.0
+    ci = math.cos(ai)
+    si = math.sin(ai)
+    cj = math.cos(aj)
+    sj = math.sin(aj)
+    ck = math.cos(ak)
+    sk = math.sin(ak)
+    cc = ci*ck
+    cs = ci*sk
+    sc = si*ck
+    ss = si*sk
+
+    q = numpy.empty((4, ))
+    if repetition:
+        q[0] = cj*(cc - ss)
+        q[i] = cj*(cs + sc)
+        q[j] = sj*(cc + ss)
+        q[k] = sj*(cs - sc
