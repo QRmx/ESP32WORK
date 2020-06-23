@@ -1272,4 +1272,22 @@ def quaternion_matrix(quaternion):
     return numpy.array([
         [1.0-q[2, 2]-q[3, 3],     q[1, 2]-q[3, 0],     q[1, 3]+q[2, 0], 0.0],
         [    q[1, 2]+q[3, 0], 1.0-q[1, 1]-q[3, 3],     q[2, 3]-q[1, 0], 0.0],
-        [    q[1, 3]-q[2, 0],     q[2, 3]+q[1,
+        [    q[1, 3]-q[2, 0],     q[2, 3]+q[1, 0], 1.0-q[1, 1]-q[2, 2], 0.0],
+        [                0.0,                 0.0,                 0.0, 1.0]])
+
+
+def quaternion_from_matrix(matrix, isprecise=False):
+    """Return quaternion from rotation matrix.
+
+    If isprecise is True, the input matrix is assumed to be a precise rotation
+    matrix and a faster algorithm is used.
+
+    >>> q = quaternion_from_matrix(numpy.identity(4), True)
+    >>> numpy.allclose(q, [1, 0, 0, 0])
+    True
+    >>> q = quaternion_from_matrix(numpy.diag([1, -1, -1, 1]))
+    >>> numpy.allclose(q, [0, 1, 0, 0]) or numpy.allclose(q, [0, -1, 0, 0])
+    True
+    >>> R = rotation_matrix(0.123, (1, 2, 3))
+    >>> q = quaternion_from_matrix(R, True)
+    >>> nump
