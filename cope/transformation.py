@@ -1290,4 +1290,21 @@ def quaternion_from_matrix(matrix, isprecise=False):
     True
     >>> R = rotation_matrix(0.123, (1, 2, 3))
     >>> q = quaternion_from_matrix(R, True)
-    >>> nump
+    >>> numpy.allclose(q, [0.9981095, 0.0164262, 0.0328524, 0.0492786])
+    True
+    >>> R = [[-0.545, 0.797, 0.260, 0], [0.733, 0.603, -0.313, 0],
+    ...      [-0.407, 0.021, -0.913, 0], [0, 0, 0, 1]]
+    >>> q = quaternion_from_matrix(R)
+    >>> numpy.allclose(q, [0.19069, 0.43736, 0.87485, -0.083611])
+    True
+    >>> R = [[0.395, 0.362, 0.843, 0], [-0.626, 0.796, -0.056, 0],
+    ...      [-0.677, -0.498, 0.529, 0], [0, 0, 0, 1]]
+    >>> q = quaternion_from_matrix(R)
+    >>> numpy.allclose(q, [0.82336615, -0.13610694, 0.46344705, -0.29792603])
+    True
+    >>> R = random_rotation_matrix()
+    >>> q = quaternion_from_matrix(R)
+    >>> is_same_transform(R, quaternion_matrix(q))
+    True
+    >>> R = euler_matrix(0.0, 0.0, numpy.pi/2.0)
+   
