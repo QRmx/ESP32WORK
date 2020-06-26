@@ -1376,4 +1376,36 @@ def quaternion_multiply(quaternion1, quaternion0):
 def quaternion_conjugate(quaternion):
     """Return conjugate of quaternion.
 
-    >>>
+    >>> q0 = random_quaternion()
+    >>> q1 = quaternion_conjugate(q0)
+    >>> q1[0] == q0[0] and all(q1[1:] == -q0[1:])
+    True
+
+    """
+    q = numpy.array(quaternion, dtype=numpy.float64, copy=True)
+    numpy.negative(q[1:], q[1:])
+    return q
+
+
+def quaternion_inverse(quaternion):
+    """Return inverse of quaternion.
+
+    >>> q0 = random_quaternion()
+    >>> q1 = quaternion_inverse(q0)
+    >>> numpy.allclose(quaternion_multiply(q0, q1), [1, 0, 0, 0])
+    True
+
+    """
+    q = numpy.array(quaternion, dtype=numpy.float64, copy=True)
+    numpy.negative(q[1:], q[1:])
+    return q / numpy.dot(q, q)
+
+
+def quaternion_real(quaternion):
+    """Return real part of quaternion.
+
+    >>> quaternion_real([3, 0, 1, 2])
+    3.0
+
+    """
+    return float(quate
