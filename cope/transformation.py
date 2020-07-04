@@ -1543,4 +1543,25 @@ class Arcball(object):
         if initial is None:
             self._qdown = numpy.array([1.0, 0.0, 0.0, 0.0])
         else:
-       
+            initial = numpy.array(initial, dtype=numpy.float64)
+            if initial.shape == (4, 4):
+                self._qdown = quaternion_from_matrix(initial)
+            elif initial.shape == (4, ):
+                initial /= vector_norm(initial)
+                self._qdown = initial
+            else:
+                raise ValueError("initial not a quaternion or matrix")
+        self._qnow = self._qpre = self._qdown
+
+    def place(self, center, radius):
+        """Place Arcball, e.g. when window size changes.
+
+        center : sequence[2]
+            Window coordinates of trackball center.
+        radius : float
+            Radius of trackball in window coordinates.
+
+        """
+        self._radius = float(radius)
+        self._center[0] = center[0]
+ 
