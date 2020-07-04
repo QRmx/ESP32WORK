@@ -1490,4 +1490,30 @@ def random_quaternion(rand=None):
                         numpy.cos(t1)*r1, numpy.sin(t2)*r2])
 
 
-def random_rotation_matr
+def random_rotation_matrix(rand=None):
+    """Return uniform random rotation matrix.
+
+    rand: array like
+        Three independent random variables that are uniformly distributed
+        between 0 and 1 for each returned quaternion.
+
+    >>> R = random_rotation_matrix()
+    >>> numpy.allclose(numpy.dot(R.T, R), numpy.identity(4))
+    True
+
+    """
+    return quaternion_matrix(random_quaternion(rand))
+
+
+class Arcball(object):
+    """Virtual Trackball Control.
+
+    >>> ball = Arcball()
+    >>> ball = Arcball(initial=numpy.identity(4))
+    >>> ball.place([320, 320], 320)
+    >>> ball.down([500, 250])
+    >>> ball.drag([475, 275])
+    >>> R = ball.matrix()
+    >>> numpy.allclose(numpy.sum(R), 3.90583455)
+    True
+    >>> ball = Arcball(initi
