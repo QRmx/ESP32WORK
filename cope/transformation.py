@@ -1516,4 +1516,31 @@ class Arcball(object):
     >>> R = ball.matrix()
     >>> numpy.allclose(numpy.sum(R), 3.90583455)
     True
-    >>> ball = Arcball(initi
+    >>> ball = Arcball(initial=[1, 0, 0, 0])
+    >>> ball.place([320, 320], 320)
+    >>> ball.setaxes([1, 1, 0], [-1, 1, 0])
+    >>> ball.constrain = True
+    >>> ball.down([400, 200])
+    >>> ball.drag([200, 400])
+    >>> R = ball.matrix()
+    >>> numpy.allclose(numpy.sum(R), 0.2055924)
+    True
+    >>> ball.next()
+
+    """
+    def __init__(self, initial=None):
+        """Initialize virtual trackball control.
+
+        initial : quaternion or rotation matrix
+
+        """
+        self._axis = None
+        self._axes = None
+        self._radius = 1.0
+        self._center = [0.0, 0.0]
+        self._vdown = numpy.array([0.0, 0.0, 1.0])
+        self._constrain = False
+        if initial is None:
+            self._qdown = numpy.array([1.0, 0.0, 0.0, 0.0])
+        else:
+       
