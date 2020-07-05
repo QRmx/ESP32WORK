@@ -1624,4 +1624,27 @@ def arcball_map_to_sphere(point, center, radius):
     if n > 1.0:
         # position outside of sphere
         n = math.sqrt(n)
-     
+        return numpy.array([v0/n, v1/n, 0.0])
+    else:
+        return numpy.array([v0, v1, math.sqrt(1.0 - n)])
+
+
+def arcball_constrain_to_axis(point, axis):
+    """Return sphere point perpendicular to axis."""
+    v = numpy.array(point, dtype=numpy.float64, copy=True)
+    a = numpy.array(axis, dtype=numpy.float64, copy=True)
+    v -= a * numpy.dot(a, v)  # on plane
+    n = vector_norm(v)
+    if n > _EPS:
+        if v[2] < 0.0:
+            numpy.negative(v, v)
+        v /= n
+        return v
+    if a[2] == 1.0:
+        return numpy.array([1.0, 0.0, 0.0])
+    return unit_vector([-a[1], a[0], 0.0])
+
+
+def arcball_nearest_axis(point, axes):
+    """Return axis, which arc is nearest to point."""
+    point = numpy.arr
