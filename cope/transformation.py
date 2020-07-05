@@ -1586,4 +1586,22 @@ class Arcball(object):
     def down(self, point):
         """Set initial cursor window coordinates and pick constrain-axis."""
         self._vdown = arcball_map_to_sphere(point, self._center, self._radius)
-        self._qdown = sel
+        self._qdown = self._qpre = self._qnow
+        if self._constrain and self._axes is not None:
+            self._axis = arcball_nearest_axis(self._vdown, self._axes)
+            self._vdown = arcball_constrain_to_axis(self._vdown, self._axis)
+        else:
+            self._axis = None
+
+    def drag(self, point):
+        """Update current cursor window coordinates."""
+        vnow = arcball_map_to_sphere(point, self._center, self._radius)
+        if self._axis is not None:
+            vnow = arcball_constrain_to_axis(vnow, self._axis)
+        self._qpre = self._qnow
+        t = numpy.cross(self._vdown, vnow)
+        if numpy.dot(t, t) < _EPS:
+            self._qnow = self._qdown
+        else:
+            q = [numpy.dot(self._vdown, vnow), t[0], t[1], t[2]]
+       
