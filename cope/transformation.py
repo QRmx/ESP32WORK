@@ -1604,4 +1604,24 @@ class Arcball(object):
             self._qnow = self._qdown
         else:
             q = [numpy.dot(self._vdown, vnow), t[0], t[1], t[2]]
-       
+            self._qnow = quaternion_multiply(q, self._qdown)
+
+    def next(self, acceleration=0.0):
+        """Continue rotation in direction of last drag."""
+        q = quaternion_slerp(self._qpre, self._qnow, 2.0+acceleration, False)
+        self._qpre, self._qnow = self._qnow, q
+
+    def matrix(self):
+        """Return homogeneous rotation matrix."""
+        return quaternion_matrix(self._qnow)
+
+
+def arcball_map_to_sphere(point, center, radius):
+    """Return unit sphere coordinates from window coordinates."""
+    v0 = (point[0] - center[0]) / radius
+    v1 = (center[1] - point[1]) / radius
+    n = v0*v0 + v1*v1
+    if n > 1.0:
+        # position outside of sphere
+        n = math.sqrt(n)
+     
