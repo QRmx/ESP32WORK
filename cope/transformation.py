@@ -1564,4 +1564,26 @@ class Arcball(object):
         """
         self._radius = float(radius)
         self._center[0] = center[0]
- 
+        self._center[1] = center[1]
+
+    def setaxes(self, *axes):
+        """Set axes to constrain rotations."""
+        if axes is None:
+            self._axes = None
+        else:
+            self._axes = [unit_vector(axis) for axis in axes]
+
+    @property
+    def constrain(self):
+        """Return state of constrain to axis mode."""
+        return self._constrain
+
+    @constrain.setter
+    def constrain(self, value):
+        """Set state of constrain to axis mode."""
+        self._constrain = bool(value)
+
+    def down(self, point):
+        """Set initial cursor window coordinates and pick constrain-axis."""
+        self._vdown = arcball_map_to_sphere(point, self._center, self._radius)
+        self._qdown = sel
