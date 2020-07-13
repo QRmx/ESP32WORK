@@ -1647,4 +1647,25 @@ def arcball_constrain_to_axis(point, axis):
 
 def arcball_nearest_axis(point, axes):
     """Return axis, which arc is nearest to point."""
-    point = numpy.arr
+    point = numpy.array(point, dtype=numpy.float64, copy=False)
+    nearest = None
+    mx = -1.0
+    for axis in axes:
+        t = numpy.dot(arcball_constrain_to_axis(point, axis), point)
+        if t > mx:
+            nearest = axis
+            mx = t
+    return nearest
+
+
+# epsilon for testing whether a number is close to zero
+_EPS = numpy.finfo(float).eps * 4.0
+
+# axis sequences for Euler angles
+_NEXT_AXIS = [1, 2, 0, 1]
+
+# map axes strings to/from tuples of inner axis, parity, repetition, frame
+_AXES2TUPLE = {
+    'sxyz': (0, 0, 0, 0), 'sxyx': (0, 0, 1, 0), 'sxzy': (0, 1, 0, 0),
+    'sxzx': (0, 1, 1, 0), 'syzx': (1, 0, 0, 0), 'syzy': (1, 0, 1, 0),
+    'syxz': (1, 1, 0, 0), 'syxy': (1, 1, 1, 0), 'sz
