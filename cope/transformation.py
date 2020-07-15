@@ -1712,4 +1712,25 @@ def vector_norm(data, axis=None, out=None):
         numpy.sqrt(out, out)
         return out
     else:
-        
+        data *= data
+        numpy.sum(data, axis=axis, out=out)
+        numpy.sqrt(out, out)
+
+
+def unit_vector(data, axis=None, out=None):
+    """Return ndarray normalized by length, i.e. Euclidean norm, along axis.
+
+    >>> v0 = numpy.random.random(3)
+    >>> v1 = unit_vector(v0)
+    >>> numpy.allclose(v1, v0 / numpy.linalg.norm(v0))
+    True
+    >>> v0 = numpy.random.rand(5, 4, 3)
+    >>> v1 = unit_vector(v0, axis=-1)
+    >>> v2 = v0 / numpy.expand_dims(numpy.sqrt(numpy.sum(v0*v0, axis=2)), 2)
+    >>> numpy.allclose(v1, v2)
+    True
+    >>> v1 = unit_vector(v0, axis=1)
+    >>> v2 = v0 / numpy.expand_dims(numpy.sqrt(numpy.sum(v0*v0, axis=1)), 1)
+    >>> numpy.allclose(v1, v2)
+    True
+    >>> v1 = numpy.empty((5, 4, 
