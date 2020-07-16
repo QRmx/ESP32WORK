@@ -1762,4 +1762,29 @@ def unit_vector(data, axis=None, out=None):
 
 
 def random_vector(size):
-    """Return 
+    """Return array of random doubles in the half-open interval [0.0, 1.0).
+
+    >>> v = random_vector(10000)
+    >>> numpy.all(v >= 0) and numpy.all(v < 1)
+    True
+    >>> v0 = random_vector(10)
+    >>> v1 = random_vector(10)
+    >>> numpy.any(v0 == v1)
+    False
+
+    """
+    return numpy.random.random(size)
+
+
+def vector_product(v0, v1, axis=0):
+    """Return vector perpendicular to vectors.
+
+    >>> v = vector_product([2, 0, 0], [0, 3, 0])
+    >>> numpy.allclose(v, [0, 0, 6])
+    True
+    >>> v0 = [[2, 0, 0, 2], [0, 2, 0, 2], [0, 0, 2, 2]]
+    >>> v1 = [[3], [0], [0]]
+    >>> v = vector_product(v0, v1)
+    >>> numpy.allclose(v, [[0, 0, 0, 0], [0, 0, 6, 6], [0, -6, 0, -6]])
+    True
+    >>> v0 = [
