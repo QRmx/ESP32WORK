@@ -1809,4 +1809,24 @@ def angle_between_vectors(v0, v1, directed=True, axis=0):
     >>> a = angle_between_vectors([1, -2, 3], [-1, 2, -3], directed=False)
     >>> numpy.allclose(a, 0)
     True
-    >>> v0 = [[2, 0, 0, 2], [0, 2, 0, 2], [0,
+    >>> v0 = [[2, 0, 0, 2], [0, 2, 0, 2], [0, 0, 2, 2]]
+    >>> v1 = [[3], [0], [0]]
+    >>> a = angle_between_vectors(v0, v1)
+    >>> numpy.allclose(a, [0, 1.5708, 1.5708, 0.95532])
+    True
+    >>> v0 = [[2, 0, 0], [2, 0, 0], [0, 2, 0], [2, 0, 0]]
+    >>> v1 = [[0, 3, 0], [0, 0, 3], [0, 0, 3], [3, 3, 3]]
+    >>> a = angle_between_vectors(v0, v1, axis=1)
+    >>> numpy.allclose(a, [1.5708, 1.5708, 1.5708, 0.95532])
+    True
+
+    """
+    v0 = numpy.array(v0, dtype=numpy.float64, copy=False)
+    v1 = numpy.array(v1, dtype=numpy.float64, copy=False)
+    dot = numpy.sum(v0 * v1, axis=axis)
+    dot /= vector_norm(v0, axis=axis) * vector_norm(v1, axis=axis)
+    return numpy.arccos(dot if directed else numpy.fabs(dot))
+
+
+def inverse_matrix(matrix):
+    """Return inverse of square transformation 
