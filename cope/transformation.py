@@ -1829,4 +1829,31 @@ def angle_between_vectors(v0, v1, directed=True, axis=0):
 
 
 def inverse_matrix(matrix):
-    """Return inverse of square transformation 
+    """Return inverse of square transformation matrix.
+
+    >>> M0 = random_rotation_matrix()
+    >>> M1 = inverse_matrix(M0.T)
+    >>> numpy.allclose(M1, numpy.linalg.inv(M0.T))
+    True
+    >>> for size in range(1, 7):
+    ...     M0 = numpy.random.rand(size, size)
+    ...     M1 = inverse_matrix(M0)
+    ...     if not numpy.allclose(M1, numpy.linalg.inv(M0)): print(size)
+
+    """
+    return numpy.linalg.inv(matrix)
+
+
+def concatenate_matrices(*matrices):
+    """Return concatenation of series of transformation matrices.
+
+    >>> M = numpy.random.rand(16).reshape((4, 4)) - 0.5
+    >>> numpy.allclose(M, concatenate_matrices(M))
+    True
+    >>> numpy.allclose(numpy.dot(M, M.T), concatenate_matrices(M, M.T))
+    True
+
+    """
+    M = numpy.identity(4)
+    for i in matrices:
+ 
