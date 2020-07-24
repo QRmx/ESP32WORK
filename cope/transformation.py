@@ -1879,4 +1879,27 @@ def is_same_transform(matrix0, matrix1):
 def _import_module(name, package=None, warn=True, prefix='_py_', ignore='_'):
     """Try import all public attributes from module into global namespace.
 
-    Existing attributes with name clashes
+    Existing attributes with name clashes are renamed with prefix.
+    Attributes starting with underscore are ignored by default.
+
+    Return True on successful import.
+
+    """
+    import warnings
+    from importlib import import_module
+    try:
+        if not package:
+            module = import_module(name)
+        else:
+            module = import_module('.' + name, package=package)
+    except ImportError:
+        if warn:
+            warnings.warn("failed to import module %s" % name)
+    else:
+        for attr in dir(module):
+            if ignore and attr.startswith(ignore):
+                continue
+            if prefix:
+                if attr in globals():
+                    globals()[prefix + attr] = globals()[attr]
+                elif warn:
