@@ -21,4 +21,28 @@ import cope.SE3lib as SE3
 import cope.axxbcovariance as axxb
 import numpy as np
 import pickle
-import matplotlib.pyp
+import matplotlib.pyplot as plt
+```
+
+Then, input As, Bs and their covariance matrices.
+```python
+# Read data files
+filename = "data/pattern_tfs"
+pattern_tfs =  pickle.load(open( filename, "rb" ) )
+filename = "data/robot_tfs"
+robot_tfs =  pickle.load(open( filename, "rb" ) )
+ksamples = 30
+# Randomly generate 30 pairs of A and B
+datasize = len(pattern_tfs)
+alpha = []
+beta = []
+ta = []
+tb = []
+for i in range(ksamples):
+  # note this
+  rand_number_1 = int(np.random.uniform(0,datasize))
+  rand_number_2 = int(np.random.uniform(0,datasize))
+  while rand_number_1==rand_number_2:
+    rand_number_2 = int(np.random.uniform(0,datasize))
+  A = np.dot(robot_tfs[rand_number_1],np.linalg.inv(robot_tfs[rand_number_2]))
+  B = np.dot(pattern_tfs[rand_number_1],n
