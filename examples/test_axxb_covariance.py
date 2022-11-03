@@ -50,4 +50,15 @@ for n in range(iters):
         beta.append(SE3.RotToVec(B[:3,:3]))
         ta.append(A[:3,3])
         tb.append(B[:3,3])
-    Rxinit,tx
+    Rxinit,txinit = axxb.FCParkSolution(alpha,beta,ta,tb)
+    
+    rot_res = axxb.IterativeSolutionRot(beta,alpha,sigmaRa,sigmaRb,Rxinit)
+    Rxhat, sigmaRx, rot_converged, betahat, alphahat, sigmaRbeta, sigmabeta, sigmaRahat, sigmaRRa = rot_res
+    txhat, sigmatx, trans_converged = axxb.IterativeSolutionTrans(betahat, alphahat, ta, tb, Rxhat, sigmaRahat, sigmaRb, sigmata, sigmatb, sigmaRx,sigmaRbeta, txinit.reshape((3,1)), 10)
+    if rot_converged and trans_converged:
+        Rxlist.append(Rxhat)
+        sigmaRx_list.append(sigmaRx)
+        txlist.append(txhat.reshape(3))
+        sigmatx_list.append(sigmatx)
+    else:
+        print "Not converged!"," rot_converged ",rot_converged ,"tra
