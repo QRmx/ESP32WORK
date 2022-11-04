@@ -61,4 +61,24 @@ for n in range(iters):
         txlist.append(txhat.reshape(3))
         sigmatx_list.append(sigmatx)
     else:
-        print "Not converged!"," rot_converged ",rot_converged ,"tra
+        print "Not converged!"," rot_converged ",rot_converged ,"trans_converged ",trans_converged
+
+        
+logRx_list = [SE3.RotToVec(Rx) for Rx in Rxlist]
+avg_log = np.average(logRx_list,axis=0)
+avg_Rx = SE3.VecToRot(avg_log)
+inv_avg_Rx = np.linalg.inv(avg_Rx)
+avg_tx = np.average(txlist,axis=0)
+        
+        
+xiRx_list =[SE3.RotToVec(np.dot(Rx,inv_avg_Rx)) for Rx in Rxlist]
+real_sigmaRx_using_avg = np.cov(np.transpose(xiRx_list))
+print "Real sigmaRx,using avg\n", np.real(real_sigmaRx_using_avg)
+print "Rand Est sigmaRx\n", random.choice(sigmaRx_list)
+avg_est_sigmaRx = np.average(sigmaRx_list, axis=0)
+print "Est avg sigma\n", np.average(sigmaRx_list, axis=0)
+
+
+xitx_list = [tx - avg_tx for tx in txlist]
+real_sigmatx_using_avg = np.cov(np.transpose(xitx_list))
+print "Real sigmatx, usin
