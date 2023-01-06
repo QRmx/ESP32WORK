@@ -65,4 +65,20 @@ measurements = [[np.array([-0.06538186,  0.00749609, -0.08090193]),
                  np.array([-0.97692982,  0.18641623, -0.10419747])],
                 [np.array([ 0.13258646, -0.05435934,  0.01305379]),
                  np.array([ 0.19554626, -0.84950123,  0.4900095 ])],
-                [np.array([-0.05478498, -0.15888366,
+                [np.array([-0.05478498, -0.15888366, -0.0831765 ]),
+                 np.array([ 0.19554626, -0.84950123,  0.4900095 ])]]
+
+T = np.array([[  9.74890642e-01,   1.97848726e-01,  -1.02196470e-01, -4.01176998e-03],
+              [ -2.11556189e-01,   9.66141266e-01,  -1.47699132e-01,  1.00540901e-02],
+              [  6.95141413e-02,   1.65610798e-01,   9.83738201e-01, -1.46057980e-04],
+              [  0.00000000e+00,   0.00000000e+00,   0.00000000e+00,  1.00000000e+00]])
+
+
+# RANSAC
+n = 5  #  the minimum number of data values required to fit the model
+k = 50 # the maximum number of iterations allowed in the algorithm
+threshold = 3.  # a threshold value for determining when a data point fits a model
+d = 7  # the number of good data values required to assert that a model fits well to data
+
+t0 = time.time()
+ran
