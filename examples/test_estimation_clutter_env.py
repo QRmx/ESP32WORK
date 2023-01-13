@@ -81,4 +81,15 @@ threshold = 3.  # a threshold value for determining when a data point fits a mod
 d = 7  # the number of good data values required to assert that a model fits well to data
 
 t0 = time.time()
-ran
+ransac_transformation, ransac_score, ransac_inliers_idx = ptcl.RansacParticle(n,k,threshold,d,mesh,angle_dict, ptcls0, measurements, pos_err, nor_err, M, sigma0, sigma_desired, prune_percentage,dim = 6, visualize = False)
+print 'Time', time.time() -t0
+print 'Ransac transformation\n', ransac_transformation
+print "Real transformation\n", T
+T_r = ransac_transformation
+print 'Dist trans:'
+print np.linalg.norm(T_r[:3,3]-T[:3,3])
+print 'Dist rot:'
+print np.linalg.norm(SE3.RotToVec(np.dot(np.linalg.inv(T_r[:3,:3]),T[:3,:3])))
+print 'Number of Inliers Detected:', len(ransac_inliers_idx)
+detected_inliers = [measurements[idx] for idx in ransac_inliers_idx] 
+ptcl.Visualize(mesh,T_r,measurements)
